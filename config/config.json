@@ -1,7 +1,6 @@
 {
   "development": {
     "username": "root",
-    "password": null,
     "password": "abdi123",
     "database": "exampledb",
     "host": "localhost",
@@ -9,7 +8,6 @@
   },
   "test": {
     "username": "root",
-    "password": null,
     "password": "abdi123",
     "database": "testdb",
     "host": "localhost",
