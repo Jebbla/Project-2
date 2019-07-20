@@ -2,6 +2,7 @@
   "development": {
     "username": "root",
     "password": null,
+    "password": "abdi123",
     "database": "exampledb",
     "host": "localhost",
     "dialect": "mysql"
@@ -9,6 +10,7 @@
   "test": {
     "username": "root",
     "password": null,
+    "password": "abdi123",
     "database": "testdb",
     "host": "localhost",
     "dialect": "mysql",
