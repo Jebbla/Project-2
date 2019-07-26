@@ -7,7 +7,19 @@ body {
   background-image: url("../images/pixels.jpg");
   font-family: 'Press Start 2P', cursive;
   font-size: 0.7rem;
-  color: grey;
+  color: #ddd;
+  background-color:black;
+}
+
+button {
+  background-color:#222;
+  color:#ccc;
+}
+
+hr {
+  background-color:white;
+  opacity:0.4;
+  height:6px;
 }
 
 .footer {
@@ -22,4 +34,69 @@ body {
 
 .list-group-item {
   line-height: 2.5;
+}
+
+.commentary {
+  text-align:center;
+  color:#eee;
+  background-color:black;
+  opacity:0.75;
+  margin:5px 0 auto 5px;
+  padding: 5px;
+  font-size: 0.8rem;
+}
+
+.form-control {
+  background-color:rgba(0,0,0,0.3);
+}
+
+.wheel {
+  background-color:rgb(0, 102, 0);
+  opacity:0.4;
+  border-radius:50%;
+  height: 350px;
+  text-align:center;
+  font-size:1.8rem;
+  color:#f4f;
+}
+
+.spinButton {
+  text-align:center;
+}
+
+#currentGuess {
+  font-size:2.2rem;
+  text-align: justify;
+  text-align-last: center;
+  resize: none;
+  background-color:black;
+  color:#eee;
+  opacity:0.5;
+  border:white 3px solid;
+  margin: 5px 5px auto 0;
+}
+
+#submitGuess {
+  margin: 5px 5px auto 0;
+}
+
+#theWord {
+  font-size: 2.0rem;
+  letter-spacing: 0.5rem;
+  background-color:black;
+  opacity: 0.75;
+  border: 15px solid;
+  border-image-source: linear-gradient(120deg,#951b37, #162594);
+  border-image-slice: 1;
+  color: white;
+  text-align:center;
+  padding-left:15px;
+}
+
+#roundGuesses {
+  opacity:0.8;
+  color:white;
+  padding:5px;
+  width:100%;
+  letter-spacing:-0.5rem
 }
