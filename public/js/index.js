@@ -86,7 +86,7 @@ var refreshExamples = function() {
 var handleFormSubmit = function(event) {
   event.preventDefault();
 
-  var example = {
+  var user = {
     text: $exampleText.val().trim(),
     description: $exampleDescription.val().trim()
   };
