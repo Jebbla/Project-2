@@ -1,33 +1,77 @@
 <div id="home">
   <div class="container">
     <div class="row">
-      <div class="col-8 offset-2">
-        <h1>{{msg}}</h1>
-        <h2>This is our Home Page!</h2>
+      <div class="col-md-4">
+        {{!-- <h1>{{msg}}</h1> --}}
+        <h2>CIRCLE OF RICHES!</h2>
+      </div>
+      <div class="col-md-3">
         <form class="clearfix mb-4" action="POST">
           <div class="form-group">
-            <label for="example-text">Example Text</label>
-            <input type="text" id="example-text" class="form-control" aria-describedby="example-text" placeholder="Enter Example Text">
+            <label for="login-username"></label>
+            <input type="text" id="login-username" class="form-control" aria-describedby="login-username"
+              placeholder="Username">
           </div>
-          <div class="form-group">
-            <label for="example-description">Example Description</label>
-            <textarea class="form-control" id="example-description" aria-describedby="example-description" placeholder="Enter Example Description"></textarea>
-          </div>
-          <button id="submit" class="btn btn-primary float-right">Submit</button>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label for="login-password"></label>
+          <input type="text" id="login-password" class="form-control" aria-describedby="login-password"
+            placeholder="Password"></input>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="form-group">
+          <button id="login-button" class="btn  btn-outline-light" style="margin-top:16px">LOG IN</button>
+        </div>
         </form>
-        <h3>Examples:</h3>
-        <ul id="example-list" class="list-group">
-          {{#each examples}}
-          <li data-id="{{this.id}}" class="list-group-item">
-            <a href="example/{{this.id}}">{{this.text}}</a>
-            <button class="btn btn-danger float-right delete">ｘ</button>
-          </li>
-          {{/each}}
-        </ul>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-sm-8">
+        <h5 style="text-align: center" id="round-category"></h5>
+        <div id="the-word"></div>
+        <div class="row">
+          <div class="col-md-3">
+            <textarea rows="1" cols="3" maxlength="1" id="current-guess"></textarea>
+          </div>
+          <div class="col-md-3">
+            <button type="button" class="btn btn-outline-light" id="submit-guess" onclick="runGame()">SUBMIT</button>
+          </div>
+          <div class="col-md-6">
+            <h3 class="commentary"></h3>
+          </div>
+        </div>
+
+        <h4 id="round-guesses"></h4>
+        <div class="row">
+          <div class="col">
+            ENTER PUZZLE GUESS:
+            {{!-- only should show when selecting "solve puzzle" --}}
+            <input type="text" id="puzzle-guess" class="form-control" aria-describedby="puzzle-guess-value">            <button class="btn btn-outline-light" id="solve-submit">SUBMIT SOLVE!</button><br>
+            <button class="btn btn-outline-light" id="vowel-choice">Buy Vowel ($250)</button>
+            {{!-- Buy vowel needs to be available only after a correct consonant guess --}}
+            <button class="btn btn-outline-light" id="solve-choice">Solve Puzzle</button>
+            {{!-- Solve unavailable unless  --}}
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="wheel"><br><br>wheel placeholder</div>
+        <div class="spin-choice">
+          <button class="btn btn-outline-light" id="spin-choice">Spin</button>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col">
+        PLAYER NAME placeholder<br>
+        Current Score placeholder<br>
+        <button id="start-round">Click to start</button>
       </div>
     </div>
   </div>
-</div>
 
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="/js/index.js"></script>
+</div>
