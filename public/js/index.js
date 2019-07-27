@@ -154,68 +154,13 @@ $submitGuess.on("click", function(){
 /*******************************************Adam's jQuery code */
 /*******************************************Adam's jQuery code */
 
-// var possibleSolutions = ["plastic storage containers"];
-var goodComments = ['Yes, there are X of that letter! $xxx is added to your score.'];
-var badComments = ['Sorry, none of that letter. You lose $xxx.']
-// var roundSolution = [];
-// var roundSolutionBlanks = [];
-var guessCorrect = null;
-var guessLetter = null;
-var win = 0;
-var guessesLog = [];
-var guessDupe = 0
 var category = '';
 
 //// FUNCTIONS FOR PREPPING THE ROUND
 var freshRound = function () {
-    // roundSolution = [];
-    // roundSolutionBlanks = [];
-    guessLetter = null;
-    guessCorrect = null;
     guessesLog.length = 0;
-    // $(".commentary").text("Enter a letter into the box on the left, then click on the 'Submit Guess' button to get started!");
 };
 
-//// FUNCTIONS FOR EACH USER GUESS
-
-// var guessDupeNLog = function () {
-//     console.log("Guessed letter: " + guessLetter);
-//     if (guessesLog.includes(guessLetter)) {
-//         $(".commentary").text("Hold up there, chief. You already guessed that letter!");
-//         guessDupe = 1;
-//         eraseText();
-//     } else {
-//         guessesLog.push(guessLetter);
-//         guessDupe = 0;
-//         $roundGuesses.text(guessesLog.join(" "));
-//     }
-//     console.log("Guess Log: " + guessesLog);
-// }
-
-// var guessMatch = function () {
-//     if (roundSolution.includes(guessLetter)) {
-//         guessCorrect = 1;
-//     } else {
-//         guessCorrect = 0;
-//         var badCommentPick = Math.floor(Math.random() * badComments.length);
-//         $(".commentary").text(badComments[badCommentPick]);
-//     }
-// }
-
-// var guessRevealOrLose = function () {
-//     if (guessCorrect === 1) {
-//         for (i = 0; i < roundSolution.length; i++) {
-//             if (guessLetter === roundSolution[i]) {
-//                 roundSolutionBlanks[i] = guessLetter;
-//                 $theWord.text(roundSolutionBlanks.join(""));
-//             }
-//         }
-//         var goodCommentPick = Math.floor(Math.random() * goodComments.length);
-//         $(".commentary").text(goodComments[goodCommentPick]);
-//     } else {
-//         // No action
-//     }
-// }
 
 var eraseText = function () {
     $("#current-guess").value = "";
@@ -268,6 +213,6 @@ $("#current-guess").onkeyup = function (event) {
 
 $(document).on('keypress', function (e) {
     if (e.which == 13) {
-        runGame();
+        API.submitGuess($currentGuess.val());
     }
 });

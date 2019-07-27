@@ -18,12 +18,25 @@ module.exports = function (app) {
   }
 
   var gFunctions = {
-
+    isWin: function() {
+      if(game.blanksArr.includes("_")) {
+          // No action - not a win yet
+        } else {
+          game.resText = "Correct guess - you win!";
+        };
+    },
+    newGame: function() {
+      game.blanksArr = [];
+      game.wheelValues = [];
+      game.guessLog = [];
+      gameBackEnd.phraseArr = [];
+    }
   }
 
   // Start Round request; still needs to include generating the wheel values and send to front end
   app.get("/api/startRound", function (req, res) {
     db.GameSolution.findAll({}).then(function (solutions) {
+      gFunctions.newGame();
       console.log(solutions);
       gameBackEnd.roundSolution = solutions[Math.floor(Math.random() * solutions.length)];
       gameBackEnd.phrase = gameBackEnd.roundSolution.dataValues.solution.toUpperCase();
@@ -88,6 +101,7 @@ module.exports = function (app) {
           };
         };
         console.log(game);
+        gFunctions.isWin();
         res.json(game);
       } else {
         gameBackEnd.guessCorrect = 0
