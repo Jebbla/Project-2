@@ -3,7 +3,8 @@ module.exports = function(sequelize, DataTypes) {
     username: { type: DataTypes.STRING, unique: true },
     password: DataTypes.STRING,
     score: DataTypes.INTEGER,
-    topScore: DataTypes.INTEGER
+    topScore: DataTypes.INTEGER,
+    token: DataTypes.STRING
   });
   return Users;
 };

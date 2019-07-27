@@ -48,10 +48,14 @@ app.post('/api/login', (req, res) => {
     id: 1,
     username: "Raxem",
   }
-
   jwt.sign({user}, 'secretkey', (err, token) => {
-    res.json({
-      token
+    db.Users.create({
+      username: req.body.text,
+      token: token
+    }).then(function(dbExample) {
+      res.json({
+        token
+      });
     });
   });
 });

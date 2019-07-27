@@ -7,12 +7,14 @@ var $exampleList = $("#example-list");
 // The API object contains methods for each kind of request we'll make
 var API = {
   saveExample: function(example) {
+    var token = localStorage.getItem("triviaToken");
     return $.ajax({
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + "my token goes here" 
       },
       type: "POST",
-      url: "api/examples",
+      url: "api/login",
       data: JSON.stringify(example)
     });
   },
@@ -74,7 +76,8 @@ var handleFormSubmit = function(event) {
     return;
   }
 
-  API.saveExample(example).then(function() {
+  API.saveExample(example).then(function(data) {
+    localStorage.setItem("triviaToken", data.token);
     refreshExamples();
   });
 
