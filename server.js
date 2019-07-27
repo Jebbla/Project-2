@@ -6,7 +6,7 @@ var jwt = require("jsonwebtoken");
 var db = require("./models");
 
 var app = express();
-var PORT = process.env.PORT || 3000;
+var PORT = process.env.PORT || 7000;
 
 // Middleware
 app.use(express.urlencoded({ extended: false }));
