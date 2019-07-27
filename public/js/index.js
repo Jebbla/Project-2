@@ -18,12 +18,14 @@ var $roundCategory = $("#round-category");
 // The API object contains methods for each kind of request we'll make
 var API = {
   saveExample: function(example) {
+    var token = localStorage.getItem("triviaToken");
     return $.ajax({
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + "my token goes here" 
       },
       type: "POST",
-      url: "api/examples",
+      url: "api/login",
       data: JSON.stringify(example)
     });
   },
@@ -48,8 +50,28 @@ var API = {
       $roundCategory.text(res.category);
       $theWord.text(res.blanksArr.join(""));
     });
-  }
-};
+  },
+  submitGuess: function (guess) {
+    console.log(guess);
+    guess = guess.toUpperCase();
+    console.log(guess);
+    return $.ajax({
+      url: "api/processGuess",
+      data: {
+        guess: guess,
+      },
+      type: "GET"
+    }).then(function(res){
+      //something with response
+      eraseText();
+      console.log(res);
+      $roundCategory.text(res.category);
+      $theWord.text(res.blanksArr.join(""));
+      $roundGuesses.text(res.guessLog.join(" "));
+      $(".commentary").text(res.resText);
+    });
+    }
+  };
 
 // refreshExamples gets new examples from the db and repopulates the list
 var refreshExamples = function() {
@@ -85,7 +107,7 @@ var refreshExamples = function() {
 var handleFormSubmit = function(event) {
   event.preventDefault();
 
-  var example = {
+  var user = {
     text: $exampleText.val().trim(),
     description: $exampleDescription.val().trim()
   };
@@ -95,7 +117,8 @@ var handleFormSubmit = function(event) {
     return;
   }
 
-  API.saveExample(example).then(function() {
+  API.saveExample(example).then(function(data) {
+    localStorage.setItem("triviaToken", data.token);
     refreshExamples();
   });
 
@@ -122,96 +145,24 @@ $startRound.on("click", function(){
   API.startRound()
   $startRound.hide()
 });
+$submitGuess.on("click", function(){
+  API.submitGuess($currentGuess.val())
+  $("#current-guess").value = "";
+});
 
 /*******************************************Adam's jQuery code */
 /*******************************************Adam's jQuery code */
 
-// var possibleSolutions = ["plastic storage containers"];
-var goodComments = ['Yes, there are X of that letter! $xxx is added to your score.'];
-var badComments = ['Sorry, none of that letter. You lose $xxx.']
-// var roundSolution = [];
-// var roundSolutionBlanks = [];
-var guessCorrect = null;
-var guessLetter = null;
-var win = 0;
-var guessesLog = [];
-var guessDupe = 0
 var category = '';
 
 //// FUNCTIONS FOR PREPPING THE ROUND
 var freshRound = function () {
-    // roundSolution = [];
-    // roundSolutionBlanks = [];
-    guessLetter = null;
-    guessCorrect = null;
     guessesLog.length = 0;
-    // $(".commentary").text("Enter a letter into the box on the left, then click on the 'Submit Guess' button to get started!");
-}
-
-var getSolution = function () {
-    // word = possibleSolutions[Math.floor(Math.random() * possibleSolutions.length)]
-    // word = word.toUpperCase();
-    // roundSolution = word.split("");
-    // console.log("Round solution chosen: " + roundSolution + " (" + roundSolution.length + " letters)")
 };
 
-var genBlanks = function () {
-    // for (i = 0; i < roundSolution.length; i++) {
-        // roundSolutionBlanks.push("_");
-    // }
-    // Reveal spaces
-    // for (i = 0; i < roundSolution.length; i++) {
-        // if (" " === roundSolution[i]) {
-            // roundSolutionBlanks[i] = " ";
-            // $theWord.text(roundSolutionBlanks.join(""));
-        // }
-    // }
-    // $theWord.text(roundSolutionBlanks.join(""));
-}
-
-//// FUNCTIONS FOR EACH USER GUESS
-
-var guessDupeNLog = function () {
-    console.log("Guessed letter: " + guessLetter);
-    if (guessesLog.includes(guessLetter)) {
-        $(".commentary").text("Hold up there, chief. You already guessed that letter!");
-        guessDupe = 1;
-        eraseText();
-    } else {
-        guessesLog.push(guessLetter);
-        guessDupe = 0;
-        $roundGuesses.text(guessesLog.join(" "));
-    }
-    console.log("Guess Log: " + guessesLog);
-}
-
-var guessMatch = function () {
-    if (roundSolution.includes(guessLetter)) {
-        guessCorrect = 1;
-    } else {
-        guessCorrect = 0;
-        var badCommentPick = Math.floor(Math.random() * badComments.length);
-        $(".commentary").text(badComments[badCommentPick]);
-    }
-}
-
-var guessRevealOrLose = function () {
-    if (guessCorrect === 1) {
-        for (i = 0; i < roundSolution.length; i++) {
-            if (guessLetter === roundSolution[i]) {
-                roundSolutionBlanks[i] = guessLetter;
-                $theWord.text(roundSolutionBlanks.join(""));
-            }
-        }
-        var goodCommentPick = Math.floor(Math.random() * goodComments.length);
-        $(".commentary").text(goodComments[goodCommentPick]);
-    } else {
-        // No action
-    }
-}
 
 var eraseText = function () {
-    $currentGuess.value = "";
+    $("#current-guess").value = "";
 }
 
 //// WIN CHECK
@@ -254,23 +205,13 @@ $("#current-guess").onkeyup = function (event) {
 }
 
 // Functions for each guess submitted - main cycle
-var runGame = function () {
-    guessLetter = $currentGuess.val();
-    guessLetter = guessLetter.toUpperCase();
-    guessDupeNLog();
-    if (guessDupe === 0) {
-        guessMatch();
-        guessRevealOrLose();
-        eraseText();
-        guessIsWin();
-    }
-}
+
 
 // Page loads & runs game
 // gameSetup();
 
 $(document).on('keypress', function (e) {
     if (e.which == 13) {
-        runGame();
+        API.submitGuess($currentGuess.val());
     }
 });

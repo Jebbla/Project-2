@@ -6,22 +6,49 @@ module.exports = function (app) {
     blanksArr: [],
     category: '',
     wheelValues:[],
+    guessLog:[],
+    resText:'',
   };
+
+  var gameBackEnd = {
+    roundSolution:{},
+    phrase:'',
+    phraseArr:[],
+    guessCorrect:null,
+  }
+
+  var gFunctions = {
+    isWin: function() {
+      if(game.blanksArr.includes("_")) {
+          // No action - not a win yet
+        } else {
+          game.resText = "Correct guess - you win!";
+        };
+    },
+    newGame: function() {
+      game.blanksArr = [];
+      game.wheelValues = [];
+      game.guessLog = [];
+      gameBackEnd.phraseArr = [];
+    }
+  }
 
   // Start Round request; still needs to include generating the wheel values and send to front end
   app.get("/api/startRound", function (req, res) {
     db.GameSolution.findAll({}).then(function (solutions) {
-      var roundSolution = solutions[Math.floor(Math.random() * solutions.length)];
-      var phrase = roundSolution.dataValues.solution.toUpperCase();
-      var phraseArr = phrase.split("");
-      game.category = roundSolution.dataValues.category;
+      gFunctions.newGame();
+      console.log(solutions);
+      gameBackEnd.roundSolution = solutions[Math.floor(Math.random() * solutions.length)];
+      gameBackEnd.phrase = gameBackEnd.roundSolution.dataValues.solution.toUpperCase();
+      gameBackEnd.phraseArr = gameBackEnd.phrase.split("");
+      game.category = gameBackEnd.roundSolution.dataValues.category;
       game.blanksArr = [];
       var genBlanks = function () {
-        for (i = 0; i < phraseArr.length; i++) {
+        for (i = 0; i < gameBackEnd.phraseArr.length; i++) {
           game.blanksArr.push("_");
         };
-        for (i = 0; i < phraseArr.length; i++) {
-          switch (phraseArr[i]) {
+        for (i = 0; i < gameBackEnd.phraseArr.length; i++) {
+          switch (gameBackEnd.phraseArr[i]) {
             case " ":
               game.blanksArr[i] = " ";
               break;
@@ -42,7 +69,7 @@ module.exports = function (app) {
       };
       genBlanks();
       console.log("\n\n____GAME TIME____\n");
-      console.log(phrase);
+      console.log(gameBackEnd.phrase);
       console.log(game.category);
       console.log(game.blanksArr.join(""));
       res.json(game);
@@ -58,27 +85,32 @@ module.exports = function (app) {
     res.json(spinValue);
   });
 
-  app.get("/api/processGuess", function (req, res) {
-    // integrate several functions here from the front-end JS: guessDupeNLog, guessMatch, guessRevealorLose, guessIsWin, and youWin; essentially the whole "runGame" function
-  });
-
-  // Create a new example
-  app.post("/api/examples", function (req, res) {
-    db.Example.create(req.body).then(function (dbExample) {
-      res.json(dbExample);
-    });
-  });
-
-  // Delete an example by id
-  app.delete("/api/examples/:id", function (req, res) {
-    db.Example.destroy({
-      where: {
-        id: req.params.id
+  app.get("/api/processGuess/", function (req, res) {
+    var guess = req.query.guess;
+    if (game.guessLog.includes(guess)) {
+      game.resText = "That letter has already been guessed. Try another one!"
+      res.json(game);
+    } else {
+      game.guessLog.push(guess);
+      if (gameBackEnd.phraseArr.includes(guess)) {
+        gameBackEnd.guessCorrect = 1
+        game.resText = 'Correct guess'
+        for (i = 0; i < gameBackEnd.phraseArr.length ; i++) {
+          if (guess === gameBackEnd.phraseArr[i]) {
+            game.blanksArr[i] = guess;
+          };
+        };
+        console.log(game);
+        gFunctions.isWin();
+        res.json(game);
+      } else {
+        gameBackEnd.guessCorrect = 0
+        game.resText = 'Incorrect guess'
+        // function to lose money
+        res.json(game);
       }
-    }).then(function (dbExample) {
-      res.json(dbExample);
-    });
+    }
+    // integrate several functions here from the front-end JS: guessDupeNLog, guessMatch, guessRevealorLose, guessIsWin, and youWin; essentially the whole "runGame" function
+
   });
-
-
 };
