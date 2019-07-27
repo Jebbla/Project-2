@@ -45,9 +45,9 @@ module.exports = function (app) {
       console.log(phrase);
       console.log(game.category);
       console.log(game.blanksArr.join(""));
+      res.json(game);
     });
     // Generate the wheel values from the DB as well
-    res.json(game);
   });
 
   // Can this value be used to determine the index of the spin?

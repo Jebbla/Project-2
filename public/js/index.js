@@ -45,6 +45,7 @@ var API = {
       url: "api/startRound",
       type: "GET"
     }).then(function(res){
+      console.log(res);
       $roundCategory.text(res.category);
       $theWord.text(res.blanksArr.join(""));
     });
@@ -267,7 +268,7 @@ var runGame = function () {
 }
 
 // Page loads & runs game
-gameSetup();
+// gameSetup();
 
 $(document).on('keypress', function (e) {
     if (e.which == 13) {
