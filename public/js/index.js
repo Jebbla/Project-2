@@ -12,6 +12,7 @@ var $solveChoice = $("#solve-choice");
 var $solveSubmit = $("#solve-submit");
 var $vowelChoice = $("#vowel-choice");
 var $startRound = $("#start-round");
+var $roundCategory = $("#round-category");
 
 
 
@@ -44,6 +45,7 @@ var API = {
       url: "api/startRound",
       type: "GET"
     }).then(function(res){
+      $roundCategory.text(res.category);
       $theWord.text(res.blanksArr.join(""));
     });
   }
@@ -116,17 +118,11 @@ var handleDeleteBtnClick = function() {
 // Add event listeners to the submit and delete buttons
 $loginButton.on("click", handleFormSubmit);
 $exampleList.on("click", ".delete", handleDeleteBtnClick);
-$startRound.on("click", API.startRound().then(function(){$startRound.hide()}));
+$startRound.on("click", function(){
+  API.startRound()
+  $startRound.hide()
+});
 
-// $("#startRound").click(function(){
-//   //do a request to get a word from the server and display the blanks
-//   API.startRound();
-//   // hide the start round button
-//   $("#startRound").hide();
-// });
-
-/*******************************************Adam's jQuery code */
-/*******************************************Adam's jQuery code */
 /*******************************************Adam's jQuery code */
 /*******************************************Adam's jQuery code */
 
@@ -140,6 +136,7 @@ var guessLetter = null;
 var win = 0;
 var guessesLog = [];
 var guessDupe = 0
+var category = '';
 
 //// FUNCTIONS FOR PREPPING THE ROUND
 var freshRound = function () {
