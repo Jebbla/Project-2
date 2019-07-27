@@ -60,11 +60,11 @@ hr {
   color:#f4f;
 }
 
-.spinButton {
+.spin-choice {
   text-align:center;
 }
 
-#currentGuess {
+#current-guess {
   font-size:2.2rem;
   text-align: justify;
   text-align-last: center;
@@ -76,11 +76,11 @@ hr {
   margin: 5px 5px auto 0;
 }
 
-#submitGuess {
+#submit-guess {
   margin: 5px 5px auto 0;
 }
 
-#theWord {
+#the-word {
   font-size: 2.0rem;
   letter-spacing: 0.5rem;
   background-color:black;
@@ -93,7 +93,7 @@ hr {
   padding-left:15px;
 }
 
-#roundGuesses {
+#round-guesses {
   opacity:0.8;
   color:white;
   padding:5px;

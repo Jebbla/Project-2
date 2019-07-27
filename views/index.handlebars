@@ -8,21 +8,21 @@
       <div class="col-md-3">
         <form class="clearfix mb-4" action="POST">
           <div class="form-group">
-            <label for="example-text"></label>
-            <input type="text" id="example-text" class="form-control" aria-describedby="example-text"
+            <label for="login-username"></label>
+            <input type="text" id="login-username" class="form-control" aria-describedby="login-username"
               placeholder="Username">
           </div>
       </div>
       <div class="col-md-3">
         <div class="form-group">
-          <label for="example-description"></label>
-          <input type="text" id="example-description" class="form-control" aria-describedby="example-description"
+          <label for="login-password"></label>
+          <input type="text" id="login-password" class="form-control" aria-describedby="login-password"
             placeholder="Password"></input>
         </div>
       </div>
       <div class="col-md-2">
         <div class="form-group">
-          <button id="submit" class="btn  btn-outline-light" style="margin-top:17px">LOG IN</button>
+          <button id="login-button" class="btn  btn-outline-light" style="margin-top:16px">LOG IN</button>
         </div>
         </form>
       </div>
@@ -31,36 +31,36 @@
     <div class="row">
       <div class="col-sm-8">
         <h5 style="text-align: center">(Category)</h5>
-        <div id="theWord"></div>
+        <div id="the-word"></div>
         <div class="row">
           <div class="col-md-3">
-            <textarea rows="1" cols="3" maxlength="1" id="currentGuess"></textarea>
+            <textarea rows="1" cols="3" maxlength="1" id="current-guess"></textarea>
           </div>
           <div class="col-md-3">
-            <button type="button" class="btn btn-outline-light" id="submitGuess" onclick="runGame()">SUBMIT</button>
+            <button type="button" class="btn btn-outline-light" id="submit-guess" onclick="runGame()">SUBMIT</button>
           </div>
           <div class="col-md-6">
             <h3 class="commentary"></h3>
           </div>
         </div>
 
-        <h4 id="roundGuesses"></h4>
+        <h4 id="round-guesses"></h4>
         <div class="row">
           <div class="col">
             ENTER PUZZLE GUESS:
             {{!-- only should show when selecting "solve puzzle" --}}
-            <input type="text" id="guess-value" class="form-control" aria-describedby="guess-value"><br>
-            <button class="btn btn-outline-light" id="buyVowelBtn">Buy Vowel ($250)</button>
+            <input type="text" id="puzzle-guess" class="form-control" aria-describedby="puzzle-guess-value">            <button class="btn btn-outline-light" id="solve-submit">SUBMIT SOLVE!</button><br>
+            <button class="btn btn-outline-light" id="vowel-choice">Buy Vowel ($250)</button>
             {{!-- Buy vowel needs to be available only after a correct consonant guess --}}
-            <button class="btn btn-outline-light" id="solveBtn">Solve Puzzle</button>
+            <button class="btn btn-outline-light" id="solve-choice">Solve Puzzle</button>
             {{!-- Solve unavailable unless  --}}
           </div>
         </div>
       </div>
       <div class="col-sm-4">
         <div class="wheel"><br><br>wheel placeholder</div>
-        <div class="spinButton">
-          <button class="btn btn-outline-light" id="spinBtn">Spin</button>
+        <div class="spin-choice">
+          <button class="btn btn-outline-light" id="spin-choice">Spin</button>
         </div>
       </div>
     </div>
@@ -68,7 +68,8 @@
     <div class="row">
       <div class="col">
         PLAYER NAME placeholder<br>
-        Current Score placeholder
+        Current Score placeholder<br>
+        <button id="start-round">Click to start</button>
       </div>
     </div>
   </div>
