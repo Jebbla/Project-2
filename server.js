@@ -1,14 +1,25 @@
 require("dotenv").config();
-var express = require("express");
+var express = require('express');
 var exphbs = require("express-handlebars");
 var jwt = require("jsonwebtoken");
 
 var path = require("path");
 var bodyParser = require("body-parser");
 var db = require("./models");
+var io = require('socket.io')(server);
+var server = require('http').Server(app);
 
 var app = express();
+<<<<<<< HEAD
+
+//var PORT = process.env.PORT || 3000;
+
+var io = require('socket.io')(80);
+
+//server.listen(4357);
+=======
 var PORT = process.env.PORT || 7000;
+>>>>>>> efbc6f6ad155ea54dc2515917b7766ea66cb1ff1
 
 // Middleware
 app.use(express.urlencoded({ extended: false }));
@@ -95,9 +106,26 @@ var syncOptions = { force: false };
 if (process.env.NODE_ENV === "test") {
   syncOptions.force = true;
 }
-
+console.log("random ")
 // Starting the server, syncing our models ------------------------------------/
-db.sequelize.sync(syncOptions).then(function() {
+
+
+io.on('connection', function (socket) {
+  io.emit('this', { will: 'be received by everyone'});
+
+  socket.on('private message', function (from, msg) {
+    console.log('I received a private message by ', from, ' saying ', msg);
+  });
+
+  socket.on('disconnect', function () {
+    io.emit('user disconnected');
+  });
+});
+
+module.exports = app;
+
+
+/*db.sequelize.sync(syncOptions).then(function() {
   app.listen(PORT, function() {
     console.log(
       "==> 🌎  Listening on port %s. Visit http://localhost:%s/ in your browser.",
@@ -106,5 +134,4 @@ db.sequelize.sync(syncOptions).then(function() {
     );
   });
 });
-
-module.exports = app;
+*/

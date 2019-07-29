@@ -1,14 +1,23 @@
 {
   "development": {
     "username": "root",
+<<<<<<< HEAD
+    "password": "abdi123",
+    "database": "exampledb",
+=======
     "password": "",
     "database": "project2db",
+>>>>>>> efbc6f6ad155ea54dc2515917b7766ea66cb1ff1
     "host": "localhost",
     "dialect": "mysql"
   },
   "test": {
     "username": "root",
+<<<<<<< HEAD
+    "password": "abdi123",
+=======
     "password": "",
+>>>>>>> efbc6f6ad155ea54dc2515917b7766ea66cb1ff1
     "database": "testdb",
     "host": "localhost",
     "dialect": "mysql",
