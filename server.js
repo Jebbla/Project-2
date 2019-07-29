@@ -10,16 +10,13 @@ var io = require('socket.io')(server);
 var server = require('http').Server(app);
 
 var app = express();
-<<<<<<< HEAD
 
-//var PORT = process.env.PORT || 3000;
+// var PORT = process.env.PORT || 3000;
+// var PORT = process.env.PORT || 7000;
 
 var io = require('socket.io')(80);
 
 //server.listen(4357);
-=======
-var PORT = process.env.PORT || 7000;
->>>>>>> efbc6f6ad155ea54dc2515917b7766ea66cb1ff1
 
 // Middleware
 app.use(express.urlencoded({ extended: false }));
