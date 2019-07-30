@@ -11,8 +11,13 @@ var $puzzleGuess = $("#puzzle-guess-value");
 var $solveChoice = $("#solve-choice");
 var $solveSubmit = $("#solve-submit");
 var $vowelChoice = $("#vowel-choice");
-var $startRound = $("#start-round");
+var $p1StartRound = $("#p1start-round");
+var $p2StartRound = $("#p2start-round");
+var $p3StartRound = $("#p3start-round");
 var $roundCategory = $("#round-category");
+var $p1Score = $("#p1-score"); 
+var $p2Score = $("#p2-score"); 
+var $p3Score = $("#p3-score"); 
 
 
 // The API object contains methods for each kind of request we'll make
@@ -49,6 +54,9 @@ var API = {
       console.log(res);
       $roundCategory.text(res.category);
       $theWord.text(res.blanksArr.join(""));
+      $p1Score.text(0);
+      $p2Score.text(0);
+      $p3Score.text(0);
     });
   },
   submitGuess: function (guess) {
@@ -58,7 +66,7 @@ var API = {
     return $.ajax({
       url: "api/processGuess",
       data: {
-        guess: guess,
+        guess: guess
       },
       type: "GET"
     }).then(function(res){
@@ -69,6 +77,9 @@ var API = {
       $theWord.text(res.blanksArr.join(""));
       $roundGuesses.text(res.guessLog.join(" "));
       $(".commentary").text(res.resText);
+      $p1Score.text(res.players.p1Score);
+      $p2Score.text(res.players.p2Score);
+      $p3Score.text(res.players.p3Score);
     });
     }
   };
@@ -140,10 +151,12 @@ var handleDeleteBtnClick = function() {
 
 // Add event listeners to the submit and delete buttons
 $loginButton.on("click", handleFormSubmit);
-$exampleList.on("click", ".delete", handleDeleteBtnClick);
-$startRound.on("click", function(){
+$solveChoice.on("click", function(){
+  $("#solve-area").show();
+});
+$p1StartRound.on("click", function(){
   API.startRound()
-  $startRound.hide()
+  $p1StartRound.hide()
 });
 $submitGuess.on("click", function(){
   API.submitGuess($currentGuess.val())

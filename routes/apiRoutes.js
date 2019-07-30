@@ -8,6 +8,11 @@ module.exports = function (app) {
     wheelValues:[],
     guessLog:[],
     resText:'',
+    players: {
+      p1Score: parseInt(0),
+      p2Score: parseInt(0),
+      p3Score: parseInt(0)
+    }
   };
 
   var gameBackEnd = {
@@ -30,6 +35,9 @@ module.exports = function (app) {
       game.wheelValues = [];
       game.guessLog = [];
       gameBackEnd.phraseArr = [];
+      game.players.p1Score = parseInt(0),
+      game.players.p2Score = parseInt(0),
+      game.players.p3Score = parseInt(0)
     }
   }
 
@@ -98,6 +106,7 @@ module.exports = function (app) {
         for (i = 0; i < gameBackEnd.phraseArr.length ; i++) {
           if (guess === gameBackEnd.phraseArr[i]) {
             game.blanksArr[i] = guess;
+            game.players.p1Score += parseInt(500);
           };
         };
         console.log(game);
@@ -106,6 +115,7 @@ module.exports = function (app) {
       } else {
         gameBackEnd.guessCorrect = 0
         game.resText = 'Incorrect guess'
+        game.players.p1Score -= parseInt(500);
         // function to lose money
         res.json(game);
       }

@@ -9,11 +9,13 @@
         <form class="clearfix mb-4" action="POST">
           <div class="form-group">
             <label for="example-text">Username</label>
-            <input type="text" id="example-text" class="form-control" aria-describedby="example-text" placeholder="Enter Username">
+            <input type="text" id="example-text" class="form-control" aria-describedby="example-text"
+              placeholder="Enter Username">
           </div>
           <div class="form-group">
             <label for="example-description">Highscore</label>
-            <textarea class="form-control" id="example-description" aria-describedby="example-description" placeholder="Enter Example Description"></textarea>
+            <textarea class="form-control" id="example-description" aria-describedby="example-description"
+              placeholder="Enter Example Description"></textarea>
           </div>
       </div>
       <div class="col-md-3">
@@ -46,13 +48,17 @@
             <h3 class="commentary"></h3>
           </div>
         </div>
-
-        <h4 id="round-guesses"></h4>
+        <h4>
+          <div id="round-guesses"></div>
+        </h4>
         <div class="row">
           <div class="col">
-            ENTER PUZZLE GUESS:
-            {{!-- only should show when selecting "solve puzzle" --}}
-            <input type="text" id="puzzle-guess" class="form-control" aria-describedby="puzzle-guess-value">            <button class="btn btn-outline-light" id="solve-submit">SUBMIT SOLVE!</button><br>
+            <div id="solve-area" class="hidden">
+              <h5>ENTER PUZZLE GUESS:</h5>
+              {{!-- only should show when selecting "solve puzzle" --}}
+              <input type="text" id="puzzle-guess" class="form-control" aria-describedby="puzzle-guess-value"> <button
+                class="btn btn-outline-light" id="solve-submit">SUBMIT SOLVE!</button><br>
+            </div>
             <button class="btn btn-outline-light" id="vowel-choice">Buy Vowel ($250)</button>
             {{!-- Buy vowel needs to be available only after a correct consonant guess --}}
             <button class="btn btn-outline-light" id="solve-choice">Solve Puzzle</button>
@@ -69,10 +75,26 @@
     </div>
     <hr>
     <div class="row">
-      <div class="col">
-        PLAYER NAME placeholder<br>
-        Current Score placeholder<br>
-        <button id="start-round">Click to start</button>
+      <div class="col-md-4">
+        <div id="p1-card" class="p-card">
+          <h5>PLAYER 1</h5>
+          <h5>SCORE: $<span id="p1-score"></span></h5>
+          <button id="p1start-round">CLICK TO START</button>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div id="p2-card" class="p-card">
+          <h5>PLAYER 2</h5>
+          <h5>SCORE: $<span id="p2-score"></span></h5>
+          <button id="p2start-round">CLICK TO START</button>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div id="p3-card" class="p-card">
+          <h5>PLAYER 3</h5>
+          <h5>SCORE: $<span id="p3-score"></span></h5>
+          <button id="p3start-round">CLICK TO START</button>
+        </div>
       </div>
     </div>
   </div>

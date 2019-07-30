@@ -12,9 +12,9 @@ var server = require('http').Server(app);
 var app = express();
 
 // var PORT = process.env.PORT || 3000;
-// var PORT = process.env.PORT || 7000;
+var PORT = process.env.PORT || 7000;
 
-var io = require('socket.io')(80);
+// var io = require('socket.io')(80);
 
 //server.listen(4357);
 
@@ -122,7 +122,7 @@ io.on('connection', function (socket) {
 module.exports = app;
 
 
-/*db.sequelize.sync(syncOptions).then(function() {
+db.sequelize.sync(syncOptions).then(function() {
   app.listen(PORT, function() {
     console.log(
       "==> 🌎  Listening on port %s. Visit http://localhost:%s/ in your browser.",
@@ -131,4 +131,3 @@ module.exports = app;
     );
   });
 });
-*/

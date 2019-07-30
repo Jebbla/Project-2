@@ -64,6 +64,16 @@ hr {
   text-align:center;
 }
 
+.hidden {
+  display:none;
+}
+
+.p-card {
+  border: 3px solid rgba(255,255,255,0.3);
+  padding: 5px;
+  min-height: 7rem;
+}
+
 #current-guess {
   font-size:2.2rem;
   text-align: justify;
@@ -98,5 +108,6 @@ hr {
   color:white;
   padding:5px;
   width:100%;
-  letter-spacing:-0.5rem
+  letter-spacing:-0.5rem;
+  min-height:3rem;
 }
