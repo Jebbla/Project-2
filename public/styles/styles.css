@@ -101,6 +101,7 @@ hr {
   color: white;
   text-align:center;
   padding-left:15px;
+  min-height: 75px;
 }
 
 #round-guesses {

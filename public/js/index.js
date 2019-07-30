@@ -57,6 +57,9 @@ var API = {
       $p1Score.text(0);
       $p2Score.text(0);
       $p3Score.text(0);
+      $submitGuess.show();
+      $currentGuess.show();
+      $solveChoice.show();
     });
   },
   submitGuess: function (guess) {
@@ -77,6 +80,9 @@ var API = {
       $theWord.text(res.blanksArr.join(""));
       $roundGuesses.text(res.guessLog.join(" "));
       $(".commentary").text(res.resText);
+      if(res.guessCorrect) {
+        $vowelChoice.show();
+      }
       $p1Score.text(res.players.p1Score);
       $p2Score.text(res.players.p2Score);
       $p3Score.text(res.players.p3Score);
