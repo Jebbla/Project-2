@@ -12,8 +12,8 @@ module.exports = function(app) {
   });
 
 // Load example page and pass in an example by user
-  app.get("/users/:user", function(req, res) {
-    db.Users.findOne({ where: { username: req.params.user } }).then(function(
+  app.get("/users/:user/:password", function(req, res) {
+    db.Users.findOne({ where: { username: req.params.user, password: req.params.password } }).then(function(
       User
     ) {
       res.render("example", {

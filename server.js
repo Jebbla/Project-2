@@ -52,7 +52,9 @@ app.post('/api/login', (req, res) => {
   }
   jwt.sign({user}, 'secretkey', (err, token) => {
     db.Users.create({
-      username: req.body.text,
+      username: req.body.username,
+      password: req.body.password,
+      score: req.body.score,
       token: token
     }).then(function(dbExample) {
       res.json({

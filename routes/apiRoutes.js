@@ -7,7 +7,8 @@ module.exports = function (app) {
     category: '',
     wheelValues:[],
   };
-
+  //get request to login 
+  
   // Start Round request; still needs to include generating the wheel values and send to front end
   app.get("/api/startRound", function (req, res) {
     db.GameSolution.findAll({}).then(function (solutions) {
