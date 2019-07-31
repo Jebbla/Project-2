@@ -13,10 +13,10 @@ module.exports = function (app) {
       p1Score: parseInt(0),
       p2Score: parseInt(0),
       p3Score: parseInt(0)
-    }
+    },
+    spinResult: {},
+    numberCorrect: null,
   };
-
-  var spinResult = {};
 
   var gameBackEnd = {
     roundSolution: {},
@@ -40,10 +40,11 @@ module.exports = function (app) {
       game.guessLog = [];
       gameBackEnd.phraseArr = [];
       gameBackEnd.fullWheel = [];
-      game.players.p1Score = parseInt(0),
-        game.players.p2Score = parseInt(0),
-        game.players.p3Score = parseInt(0),
-        game.guessCorrect = null
+      game.resText = 'Welcome to the game! Good luck!';
+      game.players.p1Score = parseInt(0);
+      game.players.p2Score = parseInt(0);
+      game.players.p3Score = parseInt(0);
+      game.guessCorrect = null
     }
   }
 
@@ -114,41 +115,54 @@ module.exports = function (app) {
   // Can this value be used to determine the index of the spin?
   app.get("/api/spinWheel", function (req, res) {
     var spinValue = Math.floor(Math.random() * 24);
-    spinResult = gameBackEnd.fullWheel[spinValue];
-    console.log(spinResult);
-    res.json(spinResult);
+    game.spinResult = gameBackEnd.fullWheel[spinValue];
+    if (game.spinResult.spaceType === "Bankrupt" && game.players.p1Score > 0) {
+      game.players.p1Score = parseInt(0);
+    };
+    res.json(game);
+    console.log("____Spin result____");
+    console.log(game.spinResult);
   });
 
   app.get("/api/processGuess/", function (req, res) {
     var guess = req.query.guess;
     if (game.guessLog.includes(guess)) {
-      game.resText = "That letter has already been guessed. Try another one!"
+      game.resText = "Oh, no! That letter has already been guessed!"
+      game.players.p1Score -= parseInt(game.spinResult.spaceValue);
+      gameBackEnd.guessCorrect = 0;
+      game.guessCorrect = 0;
       res.json(game);
     } else {
       game.guessLog.push(guess);
+      game.guessLog.sort();
       if (gameBackEnd.phraseArr.includes(guess)) {
         gameBackEnd.guessCorrect = 1;
         game.guessCorrect = 1;
-        game.resText = 'Correct guess';
+        game.numberCorrect = parseInt(0);
         for (i = 0; i < gameBackEnd.phraseArr.length; i++) {
           if (guess === gameBackEnd.phraseArr[i]) {
             game.blanksArr[i] = guess;
-            game.players.p1Score += parseInt(spinResult.spaceValue);
+            game.numberCorrect += parseInt(1);
+            game.players.p1Score += parseInt(game.spinResult.spaceValue);
           };
         };
-        // console.log(game);
+        if(game.numberCorrect === 1) {
+          game.resText = 'Yes! There is one ' + guess + '!';
+        } else {
+          game.resText = 'Yes! There are ' + game.numberCorrect + ' ' + guess + 's!';
+        };
+        console.log(game.players.p1Score);
         gFunctions.isWin();
         res.json(game);
       } else {
         gameBackEnd.guessCorrect = 0;
         game.guessCorrect = 0;
-        game.resText = 'Incorrect guess';
-        game.players.p1Score -= parseInt(spinResult.spaceValue);
+        game.resText = 'Sorry, no ' + guess + 's.';
+        game.players.p1Score -= parseInt(game.spinResult.spaceValue);
         // function to lose money
         res.json(game);
       }
     }
-    // integrate several functions here from the front-end JS: guessDupeNLog, guessMatch, guessRevealorLose, guessIsWin, and youWin; essentially the whole "runGame" function
 
   });
 };

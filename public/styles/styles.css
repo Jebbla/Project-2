@@ -41,16 +41,6 @@ hr {
   line-height: 2.5;
 }
 
-.commentary {
-  text-align: center;
-  color: #eee;
-  background-color: black;
-  opacity: 0.75;
-  margin: 5px 0 auto 5px;
-  padding: 5px;
-  font-size: 0.8rem;
-}
-
 .form-control {
   background-color: rgba(0, 0, 0, 0.3);
 }
@@ -93,6 +83,16 @@ div {
   opacity: 0.5;
   border: white 3px solid;
   margin: 5px 5px auto 0;
+}
+
+#commentary {
+  text-align: center;
+  color: #eee;
+  background-color: black;
+  opacity: 0.75;
+  margin: 5px 0 auto 5px;
+  padding: 5px;
+  font-size: 0.8rem;
 }
 
 #wheel {

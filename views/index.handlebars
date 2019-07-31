@@ -3,24 +3,24 @@
     <div class="row">
       <div class="col-md-4">
         {{!-- <h1>{{msg}}</h1> --}}
-        <h2>CIRCLE OF RICHES!</h2>
+        <h2>DICEROLL OF RICHES!</h2>
       </div>
       <div class="col-md-3">
         <form class="clearfix mb-4" action="POST">
           <div class="form-group">
-            <label for="example-text">Username</label>
+            <label for="example-text">USERNAME</label>
             <input type="text" id="example-text" class="form-control" aria-describedby="example-text"
               placeholder="Enter Username">
           </div>
           <div class="form-group">
-            <label for="example-description">Highscore</label>
+            <label for="example-description">HIGHSCORE</label>
             <textarea class="form-control" id="example-description" aria-describedby="example-description"
               placeholder="Enter Example Description"></textarea>
           </div>
       </div>
       <div class="col-md-3">
         <div class="form-group">
-          <label for="login-password"></label>
+          <label for="login-password">PASSWORD</label>
           <input type="text" id="login-password" class="form-control" aria-describedby="login-password"
             placeholder="Password"></input>
         </div>
@@ -36,7 +36,7 @@
     <div class="row">
       <div class="col-sm-8">
         <h5 style="text-align: center" id="round-category"></h5>
-        <div id="the-word"></div>
+        <div id="the-word" class="hidden"></div>
         <div class="row">
           <div class="col-md-3 submit-block">
             <textarea rows="1" cols="3" maxlength="1" id="current-guess" class="hidden"></textarea>
@@ -45,7 +45,7 @@
             <button type="button" class="btn btn-outline-light hidden" id="submit-guess">SUBMIT</button>
           </div>
           <div class="col-md-6">
-            <h3 class="commentary"></h3>
+            <h3 id="commentary">Waiting for player...</h3>
           </div>
         </div>
         <h4>
@@ -60,20 +60,20 @@
           <div class="col">
             <div id="solve-area" class="hidden">
               <h5>ENTER PUZZLE GUESS:</h5>
-              <input type="text" id="puzzle-guess" class="form-control" aria-describedby="puzzle-guess-value"> <button
+              <input type="text" id="puzzle-guess-value" class="form-control" aria-describedby="puzzle-guess-value"> <button
                 class="btn btn-outline-light" id="solve-submit">SUBMIT SOLVE!</button><br>
             </div>
           </div>
         </div>
     <div class="row">
       <div class="col-sm-4 ctr choice-block">
-        <button class="btn btn-outline-light hidden" id="solve-choice">Solve Puzzle</button>
+        <button class="btn btn-outline-light hidden" id="solve-choice">SOLVE PUZZLE</button>
       </div>
       <div class="col-sm-4 ctr">
-        <button class="btn btn-outline-light hidden" id="vowel-choice">Buy Vowel ($250)</button>
+        <button class="btn btn-outline-light hidden" id="vowel-choice">BUY VOWEL ($250)</button>
       </div>
       <div class="col-sm-4 ctr">
-        <button class="btn btn-outline-light" id="spin-choice">ROLL!</button>
+        <button class="btn btn-outline-light hidden" id="spin-choice">ROLL!</button>
       </div>
     </div>
     <hr>

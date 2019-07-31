@@ -4,6 +4,7 @@ var $loginPassword = $("#login-password");
 var $loginButton = $("#login-button");
 var $exampleList = $("#example-list");
 var $theWord = $("#the-word");
+var $commentary = $("#commentary");
 var $currentGuess = $("#current-guess");
 var $submitGuess = $("#submit-guess");
 var $roundGuesses = $("#round-guesses");
@@ -23,7 +24,7 @@ var $wheel = $("#wheel");
 
 // The API object contains methods for each kind of request we'll make
 var API = {
-  saveExample: function(example) {
+  saveExample: function (example) {
     var token = localStorage.getItem("triviaToken");
     return $.ajax({
       headers: {
@@ -35,46 +36,59 @@ var API = {
       data: JSON.stringify(example)
     });
   },
-  getExamples: function() {
+  getExamples: function () {
     return $.ajax({
       url: "api/examples",
       type: "GET"
     });
   },
-  deleteExample: function(id) {
+  deleteExample: function (id) {
     return $.ajax({
       url: "api/examples/" + id,
       type: "DELETE"
     });
   },
-  startRound: function() {
+  startRound: function () {
     return $.ajax({
       url: "api/startRound",
       type: "GET"
-    }).then(function(res) {
+    }).then(function (res) {
       console.log(res);
       $roundCategory.text(res.category);
+      $commentary.text(res.resText);
       $theWord.text(res.blanksArr.join(""));
       $p1Score.text(0);
       $p2Score.text(0);
       $p3Score.text(0);
       $solveChoice.show();
+      $spinChoice.show();
+      $theWord.show();
     });
   },
-  spinWheel: function() {
+  spinWheel: function () {
     return $.ajax({
       url: "api/spinWheel",
       type: "GET"
-    }).then(function(res) {
+    }).then(function (res) {
       console.log(res);
-      $wheel.text(res.displayValue);
-      $submitGuess.show();
-      $currentGuess.show();
-      $solveChoice.hide();
-      $spinChoice.hide();
+      $wheel.text(res.spinResult.displayValue);
+      if (res.spinResult.spaceType === "Bankrupt") {
+        $p1Score.text(res.players.p1Score);
+        $commentary.text("BANKRUPT! Major bummer!");
+        $spinChoice.show();
+        $solveChoice.show();
+      } else {
+        $commentary.text("Enter your guess!");
+        $submitGuess.show();
+        $currentGuess.show();
+        $solveChoice.hide();
+        $spinChoice.hide();
+        document.getElementById("current-guess").value='';
+        document.querySelector("#current-guess").focus();
+      }
     });
   },
-  submitGuess: function(guess) {
+  submitGuess: function (guess) {
     console.log(guess);
     guess = guess.toUpperCase();
     console.log(guess);
@@ -84,16 +98,17 @@ var API = {
         guess: guess
       },
       type: "GET"
-    }).then(function(res) {
+    }).then(function (res) {
       //something with response
       eraseText();
       console.log(res);
       $roundCategory.text(res.category);
       $theWord.text(res.blanksArr.join(""));
       $roundGuesses.text(res.guessLog.join(" "));
-      $(".commentary").text(res.resText);
+      $commentary.text(res.resText);
       if (res.guessCorrect) {
         $vowelChoice.show();
+        $solveChoice.show();
       } else {
         $vowelChoice.hide();
       }
@@ -108,9 +123,9 @@ var API = {
 };
 
 // refreshExamples gets new examples from the db and repopulates the list
-var refreshExamples = function() {
-  API.getExamples().then(function(data) {
-    var $examples = data.map(function(example) {
+var refreshExamples = function () {
+  API.getExamples().then(function (data) {
+    var $examples = data.map(function (example) {
       var $a = $("<a>")
         .text(example.text)
         .attr("href", "/example/" + example.id);
@@ -138,7 +153,7 @@ var refreshExamples = function() {
 
 // handleFormSubmit is called whenever we submit a new example
 // Save the new example to the db and refresh the list
-var handleFormSubmit = function(event) {
+var handleFormSubmit = function (event) {
   event.preventDefault();
 
   var user = {
@@ -151,7 +166,7 @@ var handleFormSubmit = function(event) {
     return;
   }
 
-  API.saveExample(example).then(function(data) {
+  API.saveExample(example).then(function (data) {
     localStorage.setItem("triviaToken", data.token);
     refreshExamples();
   });
@@ -162,30 +177,30 @@ var handleFormSubmit = function(event) {
 
 // handleDeleteBtnClick is called when an example's delete button is clicked
 // Remove the example from the db and refresh the list
-var handleDeleteBtnClick = function() {
+var handleDeleteBtnClick = function () {
   var idToDelete = $(this)
     .parent()
     .attr("data-id");
 
-  API.deleteExample(idToDelete).then(function() {
+  API.deleteExample(idToDelete).then(function () {
     refreshExamples();
   });
 };
 
 // Add event listeners to the submit and delete buttons
 $loginButton.on("click", handleFormSubmit);
-$spinChoice.on("click", function() {
+$spinChoice.on("click", function () {
   API.spinWheel();
   console.log("spinning!");
 });
-$solveChoice.on("click", function() {
+$solveChoice.on("click", function () {
   $("#solve-area").show();
 });
-$p1StartRound.on("click", function() {
+$p1StartRound.on("click", function () {
   API.startRound();;
   $p1StartRound.hide();;
 });
-$submitGuess.on("click", function() {
+$submitGuess.on("click", function () {
   API.submitGuess($currentGuess.val());;
   $("#current-guess").value = "";
 });
@@ -196,17 +211,17 @@ $submitGuess.on("click", function() {
 var category = "";
 
 //// FUNCTIONS FOR PREPPING THE ROUND
-var freshRound = function() {
+var freshRound = function () {
   guessesLog.length = 0;
 };
 
-var eraseText = function() {
+var eraseText = function () {
   $("#current-guess").value = "";
-};;
+};
 
 //// WIN CHECK
 
-var guessIsWin = function() {
+var guessIsWin = function () {
   if (roundSolutionBlanks.includes("_")) {
     // No action; not a win yet.
   } else {
@@ -216,11 +231,11 @@ var guessIsWin = function() {
 
 //// USER WINS
 
-var youWin = function() {
+var youWin = function () {
   win = 0;
   // Replace this alert, don't restart round until a restart button is pushed
   $submitGuess.prop("disabled", true);
-  $(".commentary").text("Yeah! You win! Hit the 'Start a New Game' button to play again.");
+  $commentary.text("Yeah! You win! Hit the 'Start a New Game' button to play again.");
   // Disable the submit button until new round starts
 };;
 
@@ -228,7 +243,7 @@ var youWin = function() {
 
 // New Game Setup
 
-var gameSetup = function() {
+var gameSetup = function () {
   freshRound();
   // getSolution();
   // genBlanks();
@@ -239,9 +254,9 @@ var gameSetup = function() {
 };;
 
 // Control for the text field - only allow letters (no symbols or numbers)
-$("#current-guess").onkeyup = function(event) {
-  this.value = this.value.replace(/[^a-zA-Z]/gi, "");
-};;
+document.getElementById("current-guess").onkeyup = function (event) {
+  this.value = this.value.replace(/[^a-zA-Z]/gi, '');
+};
 
 // Functions for each guess submitted - main cycle
 
