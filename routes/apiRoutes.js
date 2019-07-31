@@ -16,6 +16,8 @@ module.exports = function (app) {
     }
   };
 
+  var spinResult = {};
+
   var gameBackEnd = {
     roundSolution: {},
     phrase: '',
@@ -98,25 +100,23 @@ module.exports = function (app) {
 
     getSolution();
     getWheel();
-
-    Promise.all([getSolution, getWheel]).then(function () {
-      console.log(game);
+    setTimeout(function () {
+      res.json(game);
       console.log("\n\n____GAME TIME____\n");
       console.log(gameBackEnd.phrase);
       console.log(game.category);
       console.log(game.blanksArr.join(""));
-      res.json(game);
-    });
+    }, 750);
 
     // Generate the wheel values from the DB as well
   });
 
   // Can this value be used to determine the index of the spin?
   app.get("/api/spinWheel", function (req, res) {
-    spinValue = function () {
-      Math.floor(Math.random() * 24);
-    }
-    res.json(spinValue);
+    var spinValue = Math.floor(Math.random() * 24);
+    spinResult = gameBackEnd.fullWheel[spinValue];
+    console.log(spinResult);
+    res.json(spinResult);
   });
 
   app.get("/api/processGuess/", function (req, res) {
@@ -133,7 +133,7 @@ module.exports = function (app) {
         for (i = 0; i < gameBackEnd.phraseArr.length; i++) {
           if (guess === gameBackEnd.phraseArr[i]) {
             game.blanksArr[i] = guess;
-            game.players.p1Score += parseInt(500);
+            game.players.p1Score += parseInt(spinResult.spaceValue);
           };
         };
         // console.log(game);
@@ -143,7 +143,7 @@ module.exports = function (app) {
         gameBackEnd.guessCorrect = 0;
         game.guessCorrect = 0;
         game.resText = 'Incorrect guess';
-        game.players.p1Score -= parseInt(500);
+        game.players.p1Score -= parseInt(spinResult.spaceValue);
         // function to lose money
         res.json(game);
       }

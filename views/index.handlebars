@@ -38,7 +38,7 @@
         <h5 style="text-align: center" id="round-category"></h5>
         <div id="the-word"></div>
         <div class="row">
-          <div class="col-md-3">
+          <div class="col-md-3 submit-block">
             <textarea rows="1" cols="3" maxlength="1" id="current-guess" class="hidden"></textarea>
           </div>
           <div class="col-md-3">
@@ -51,25 +51,29 @@
         <h4>
           <div id="round-guesses"></div>
         </h4>
-        <div class="row">
+        </div>
+      <div class="col-sm-4">
+        <div id="wheel"></div>
+      </div>
+    </div>
+    <div class="row">
           <div class="col">
             <div id="solve-area" class="hidden">
               <h5>ENTER PUZZLE GUESS:</h5>
-              {{!-- only should show when selecting "solve puzzle" --}}
               <input type="text" id="puzzle-guess" class="form-control" aria-describedby="puzzle-guess-value"> <button
                 class="btn btn-outline-light" id="solve-submit">SUBMIT SOLVE!</button><br>
             </div>
-            <button class="btn btn-outline-light hidden" id="solve-choice">Solve Puzzle</button>
-            <button class="btn btn-outline-light hidden" id="vowel-choice">Buy Vowel ($250)</button>
-            {{!-- Buy vowel needs to be available only after a correct consonant guess --}}
           </div>
         </div>
+    <div class="row">
+      <div class="col-sm-4 ctr choice-block">
+        <button class="btn btn-outline-light hidden" id="solve-choice">Solve Puzzle</button>
       </div>
-      <div class="col-sm-4">
-        <div class="wheel"><br><br>wheel placeholder</div>
-        <div class="spin-choice">
-          <button class="btn btn-outline-light" id="spin-choice">Spin</button>
-        </div>
+      <div class="col-sm-4 ctr">
+        <button class="btn btn-outline-light hidden" id="vowel-choice">Buy Vowel ($250)</button>
+      </div>
+      <div class="col-sm-4 ctr">
+        <button class="btn btn-outline-light" id="spin-choice">ROLL!</button>
       </div>
     </div>
     <hr>

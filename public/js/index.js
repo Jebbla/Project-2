@@ -11,14 +11,15 @@ var $puzzleGuess = $("#puzzle-guess-value");
 var $solveChoice = $("#solve-choice");
 var $solveSubmit = $("#solve-submit");
 var $vowelChoice = $("#vowel-choice");
+var $spinChoice = $("#spin-choice");
 var $p1StartRound = $("#p1start-round");
 var $p2StartRound = $("#p2start-round");
 var $p3StartRound = $("#p3start-round");
 var $roundCategory = $("#round-category");
-var $p1Score = $("#p1-score"); 
-var $p2Score = $("#p2-score"); 
-var $p3Score = $("#p3-score"); 
-
+var $p1Score = $("#p1-score");
+var $p2Score = $("#p2-score");
+var $p3Score = $("#p3-score");
+var $wheel = $("#wheel");
 
 // The API object contains methods for each kind of request we'll make
 var API = {
@@ -27,7 +28,7 @@ var API = {
     return $.ajax({
       headers: {
         "Content-Type": "application/json",
-        "Authorization": "Bearer " + "my token goes here" 
+        Authorization: "Bearer " + "my token goes here"
       },
       type: "POST",
       url: "api/login",
@@ -50,19 +51,30 @@ var API = {
     return $.ajax({
       url: "api/startRound",
       type: "GET"
-    }).then(function(res){
+    }).then(function(res) {
       console.log(res);
       $roundCategory.text(res.category);
       $theWord.text(res.blanksArr.join(""));
       $p1Score.text(0);
       $p2Score.text(0);
       $p3Score.text(0);
-      $submitGuess.show();
-      $currentGuess.show();
       $solveChoice.show();
     });
   },
-  submitGuess: function (guess) {
+  spinWheel: function() {
+    return $.ajax({
+      url: "api/spinWheel",
+      type: "GET"
+    }).then(function(res) {
+      console.log(res);
+      $wheel.text(res.displayValue);
+      $submitGuess.show();
+      $currentGuess.show();
+      $solveChoice.hide();
+      $spinChoice.hide();
+    });
+  },
+  submitGuess: function(guess) {
     console.log(guess);
     guess = guess.toUpperCase();
     console.log(guess);
@@ -72,7 +84,7 @@ var API = {
         guess: guess
       },
       type: "GET"
-    }).then(function(res){
+    }).then(function(res) {
       //something with response
       eraseText();
       console.log(res);
@@ -80,15 +92,20 @@ var API = {
       $theWord.text(res.blanksArr.join(""));
       $roundGuesses.text(res.guessLog.join(" "));
       $(".commentary").text(res.resText);
-      if(res.guessCorrect) {
+      if (res.guessCorrect) {
         $vowelChoice.show();
+      } else {
+        $vowelChoice.hide();
       }
+      $submitGuess.hide();
+      $currentGuess.hide();
+      $spinChoice.show();
       $p1Score.text(res.players.p1Score);
       $p2Score.text(res.players.p2Score);
       $p3Score.text(res.players.p3Score);
     });
-    }
-  };
+  }
+};
 
 // refreshExamples gets new examples from the db and repopulates the list
 var refreshExamples = function() {
@@ -157,80 +174,82 @@ var handleDeleteBtnClick = function() {
 
 // Add event listeners to the submit and delete buttons
 $loginButton.on("click", handleFormSubmit);
-$solveChoice.on("click", function(){
+$spinChoice.on("click", function() {
+  API.spinWheel();
+  console.log("spinning!");
+});
+$solveChoice.on("click", function() {
   $("#solve-area").show();
 });
-$p1StartRound.on("click", function(){
-  API.startRound()
-  $p1StartRound.hide()
+$p1StartRound.on("click", function() {
+  API.startRound();;
+  $p1StartRound.hide();;
 });
-$submitGuess.on("click", function(){
-  API.submitGuess($currentGuess.val())
+$submitGuess.on("click", function() {
+  API.submitGuess($currentGuess.val());;
   $("#current-guess").value = "";
 });
 
 /*******************************************Adam's jQuery code */
 /*******************************************Adam's jQuery code */
 
-var category = '';
+var category = "";
 
 //// FUNCTIONS FOR PREPPING THE ROUND
-var freshRound = function () {
-    guessesLog.length = 0;
+var freshRound = function() {
+  guessesLog.length = 0;
 };
 
-
-var eraseText = function () {
-    $("#current-guess").value = "";
-}
+var eraseText = function() {
+  $("#current-guess").value = "";
+};;
 
 //// WIN CHECK
 
-var guessIsWin = function () {
-    if (roundSolutionBlanks.includes("_")) {
-        // No action; not a win yet.
-    } else {
-        youWin();
-    }
-}
+var guessIsWin = function() {
+  if (roundSolutionBlanks.includes("_")) {
+    // No action; not a win yet.
+  } else {
+    youWin();
+  }
+};;
 
 //// USER WINS
 
-var youWin = function () {
-    win = 0;
-    // Replace this alert, don't restart round until a restart button is pushed
-    $submitGuess.prop("disabled", true);
-    $(".commentary").text("Yeah! You win! Hit the 'Start a New Game' button to play again.");
-    // Disable the submit button until new round starts
-}
+var youWin = function() {
+  win = 0;
+  // Replace this alert, don't restart round until a restart button is pushed
+  $submitGuess.prop("disabled", true);
+  $(".commentary").text("Yeah! You win! Hit the 'Start a New Game' button to play again.");
+  // Disable the submit button until new round starts
+};;
 
 //////////// Actual stuff -happening- /////////////////
 
 // New Game Setup
 
-var gameSetup = function () {
-    freshRound();
-    // getSolution();
-    // genBlanks();
-    // turnsLeft = 6; // Sorry, not drawing a head, body, two arms, two legs :(
-    $submitGuess.prop("disabled", false);
-    $theWord.text(roundSolutionBlanks.join(""));
-    $roundGuesses.text(guessesLog.join(" "));
-}
+var gameSetup = function() {
+  freshRound();
+  // getSolution();
+  // genBlanks();
+  // turnsLeft = 6; // Sorry, not drawing a head, body, two arms, two legs :(
+  $submitGuess.prop("disabled", false);
+  $theWord.text(roundSolutionBlanks.join(""));
+  $roundGuesses.text(guessesLog.join(" "));
+};;
 
 // Control for the text field - only allow letters (no symbols or numbers)
-$("#current-guess").onkeyup = function (event) {
-    this.value = this.value.replace(/[^a-zA-Z]/gi, '');
-}
+$("#current-guess").onkeyup = function(event) {
+  this.value = this.value.replace(/[^a-zA-Z]/gi, "");
+};;
 
 // Functions for each guess submitted - main cycle
-
 
 // Page loads & runs game
 // gameSetup();
 
-$(document).on('keypress', function (e) {
-    if (e.which == 13) {
-        API.submitGuess($currentGuess.val());
-    }
+$(document).on("keypress", function (e) {
+  if (e.which == 13) {
+    API.submitGuess($currentGuess.val());
+  }
 });

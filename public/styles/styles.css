@@ -8,18 +8,18 @@ body {
   font-family: 'Press Start 2P', cursive;
   font-size: 0.7rem;
   color: #ddd;
-  background-color:black;
+  background-color: black;
 }
 
 button {
-  background-color:#222;
-  color:#ccc;
+  background-color: #222;
+  color: #ccc;
 }
 
 hr {
-  background-color:white;
-  opacity:0.4;
-  height:6px;
+  background-color: white;
+  opacity: 0.4;
+  height: 6px;
 }
 
 .footer {
@@ -28,8 +28,13 @@ hr {
   bottom: 0;
   width: 100%;
   font-size: 10px;
-  color: whitesmoke;
+  color: rgba(255, 255, 255, 0.5);
   text-align: center;
+  z-index: -10;
+}
+
+.footer-spacer {
+  height: 50px;
 }
 
 .list-group-item {
@@ -37,53 +42,71 @@ hr {
 }
 
 .commentary {
-  text-align:center;
-  color:#eee;
-  background-color:black;
-  opacity:0.75;
-  margin:5px 0 auto 5px;
+  text-align: center;
+  color: #eee;
+  background-color: black;
+  opacity: 0.75;
+  margin: 5px 0 auto 5px;
   padding: 5px;
   font-size: 0.8rem;
 }
 
 .form-control {
-  background-color:rgba(0,0,0,0.3);
+  background-color: rgba(0, 0, 0, 0.3);
 }
 
-.wheel {
-  background-color:rgb(0, 102, 0);
-  opacity:0.4;
-  border-radius:50%;
-  height: 350px;
-  text-align:center;
-  font-size:1.8rem;
-  color:#f4f;
-}
+/* Used for quick visualization of divs */
+/* 
+div {
+  border: 1px white solid;
+} */
 
-.spin-choice {
-  text-align:center;
+.ctr {
+  text-align:center;  
 }
 
 .hidden {
-  display:none;
+  display: none;
+}
+
+.submit-block {
+  min-height: 80px;
+}
+
+.choice-block {
+  min-height: 60px;
 }
 
 .p-card {
-  border: 3px solid rgba(255,255,255,0.3);
+  border: 3px solid rgba(255, 255, 255, 0.3);
   padding: 5px;
   min-height: 7rem;
 }
 
 #current-guess {
-  font-size:2.2rem;
+  font-size: 2.2rem;
   text-align: justify;
   text-align-last: center;
   resize: none;
-  background-color:black;
-  color:#eee;
-  opacity:0.5;
-  border:white 3px solid;
+  background-color: black;
+  color: #eee;
+  opacity: 0.5;
+  border: white 3px solid;
   margin: 5px 5px auto 0;
+}
+
+#wheel {
+  /* background-color:rgb(0, 102, 0); */
+  /* opacity:0.4; */
+  /* border-radius:50%;
+  height: 350px; */
+  border-radius: 10%;
+  text-align: center;
+  font-size: 3rem;
+  color: white;
+  transform: rotate(345deg);
+  margin: 75px 0 75px 0;
+  min-height: 100px;
 }
 
 #submit-guess {
@@ -93,22 +116,22 @@ hr {
 #the-word {
   font-size: 2.0rem;
   letter-spacing: 0.5rem;
-  background-color:black;
+  background-color: black;
   opacity: 0.75;
   border: 15px solid;
-  border-image-source: linear-gradient(120deg,#951b37, #162594);
+  border-image-source: linear-gradient(120deg, #951b37, #162594);
   border-image-slice: 1;
   color: white;
-  text-align:center;
-  padding-left:15px;
+  text-align: center;
+  padding-left: 15px;
   min-height: 75px;
 }
 
 #round-guesses {
-  opacity:0.8;
-  color:white;
-  padding:5px;
-  width:100%;
-  letter-spacing:-0.5rem;
-  min-height:3rem;
+  opacity: 0.8;
+  color: white;
+  padding: 5px;
+  width: 100%;
+  letter-spacing: -0.5rem;
+  min-height: 3rem;
 }
