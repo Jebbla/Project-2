@@ -5,21 +5,26 @@ var $loginPassword = $("#login-password");
 var $loginButton = $("#login-button");
 var $exampleList = $("#example-list");
 var $theWord = $("#the-word");
+var $commentary = $("#commentary");
 var $currentGuess = $("#current-guess");
 var $submitGuess = $("#submit-guess");
 var $roundGuesses = $("#round-guesses");
 var $puzzleGuess = $("#puzzle-guess-value");
 var $solveChoice = $("#solve-choice");
 var $solveSubmit = $("#solve-submit");
+var $solveArea = $("#solve-area");
 var $vowelChoice = $("#vowel-choice");
-var $startRound = $("#start-round");
+var $spinChoice = $("#spin-choice");
+var $p1StartRound = $("#p1start-round");
+var $p2StartRound = $("#p2start-round");
+var $p3StartRound = $("#p3start-round");
 var $roundCategory = $("#round-category");
 var $exampleText = $("#example-text");
 var $loginHighscore = $("#login-highscore");
 
 // The API object contains methods for each kind of request we'll make
 var API = {
-  saveExample: function(example) {
+  saveExample: function (example) {
     var token = localStorage.getItem("triviaToken");
     return $.ajax({
       headers: {
@@ -31,19 +36,19 @@ var API = {
       data: JSON.stringify(example)
     });
   },
-  getExamples: function() {
+  getExamples: function () {
     return $.ajax({
       url: "api/examples",
       type: "GET"
     });
   },
-  deleteExample: function(id) {
+  deleteExample: function (id) {
     return $.ajax({
       url: "api/examples/" + id,
       type: "DELETE"
     });
   },
-  startRound: function() {
+  startRound: function () {
     return $.ajax({
       url: "api/startRound",
       type: "GET"
@@ -51,14 +56,47 @@ var API = {
       console.log(res);
       $roundCategory.text(res.category);
       $theWord.text(res.blanksArr.join(""));
+      $roundGuesses.text(res.guessLog.join(" "));
+      $commentary.text(res.resText);
+      if (res.guessCorrect) {
+        $vowelChoice.show();
+        $solveChoice.show();
+      } else {
+        $vowelChoice.hide();
+      }
+      $submitGuess.hide();
+      $currentGuess.hide();
+      $spinChoice.show();
+      $p1Score.text(res.players.p1Score);
+      $p2Score.text(res.players.p2Score);
+      $p3Score.text(res.players.p3Score);
+    });
+  },
+
+  submitSolve: function (solveGuess) {
+    solveGuess = solveGuess.toUpperCase();
+    solveGuess = solveGuess.replace(/-| |\?|!|[0-9]|,/g,'');
+    return $.ajax({
+      url: "api/processSolve",
+      data: {
+        solveGuess: solveGuess
+      },
+      type: "GET"
+    }).then(function (res) {
+      console.log(res);
+      $p1Score.text(res.players.p1Score);
+      $commentary.text(res.resText);
+      if(res.gameWon) {
+        // Yay win, do some stuff
+      };
     });
   }
 };
 
 // refreshExamples gets new examples from the db and repopulates the list
-var refreshExamples = function() {
-  API.getExamples().then(function(data) {
-    var $examples = data.map(function(example) {
+var refreshExamples = function () {
+  API.getExamples().then(function (data) {
+    var $examples = data.map(function (example) {
       var $a = $("<a>")
         .text(example.username)
         .attr("href", "/example/" + example.id);
@@ -86,7 +124,7 @@ var refreshExamples = function() {
 
 // handleFormSubmit is called whenever we submit a new example
 // Save the new example to the db and refresh the list
-var handleFormSubmit = function(event) {
+var handleFormSubmit = function (event) {
   event.preventDefault();
 
   var example = {
@@ -100,7 +138,7 @@ var handleFormSubmit = function(event) {
     return;
   }
 
-  API.saveExample(example).then(function(data) {
+  API.saveExample(example).then(function (data) {
     localStorage.setItem("triviaToken", data.token);
     // refreshExamples();
   });
@@ -112,17 +150,17 @@ var handleFormSubmit = function(event) {
 
 // handleDeleteBtnClick is called when an example's delete button is clicked
 // Remove the example from the db and refresh the list
-var handleDeleteBtnClick = function() {
+var handleDeleteBtnClick = function () {
   var idToDelete = $(this)
     .parent()
     .attr("data-id");
 
-  API.deleteExample(idToDelete).then(function() {
+  API.deleteExample(idToDelete).then(function () {
     refreshExamples();
   });
 };
 
-// Add event listeners to the submit and delete buttons
+// EVENT LISTENERS
 $loginButton.on("click", handleFormSubmit);
 $exampleList.on("click", ".delete", handleDeleteBtnClick);
 $startRound.on("click", function() {
@@ -284,8 +322,18 @@ var runGame = function() {
  // alert("username already taken or password incorrect, oops!");
 //}
 
-// Page loads & runs game
-// gameSetup();
+$("#current-guess").keydown(function (e) {
+  // Only allow delete, backspace, enter:
+  if ($.inArray(e.keyCode, [8, 46, 13]) !== -1) {
+    return;
+  }
+  // Restrict entries based on whether the current guess is supposed to be a vowel:
+  if (vowelGuess === true && $.inArray(e.keyCode, [65, 69, 73, 79, 85]) === -1) {
+    e.preventDefault();
+  } else if (vowelGuess === false && $.inArray(e.keyCode, [66, 67, 68, 70, 71, 72, 74, 75, 76, 77, 78, 80, 81, 82, 83, 84, 86, 87, 88, 89, 90]) === -1) {
+    e.preventDefault();
+  };
+});
 
 $(document).on("keypress", function(e) {
   if (e.which == 13) {

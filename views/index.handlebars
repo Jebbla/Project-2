@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-md-4">
         {{!-- <h1>{{msg}}</h1> --}}
-        <h2>CIRCLE OF RICHES!</h2>
+        <h2>DICEROLL OF RICHES!</h2>
       </div>
       <div class="col-md-3">
         <form class="clearfix mb-4" action="POST">
@@ -18,7 +18,7 @@
       </div>
       <div class="col-md-3">
         <div class="form-group">
-          <label for="login-password"></label>
+          <label for="login-password">PASSWORD</label>
           <input type="text" id="login-password" class="form-control" aria-describedby="login-password"
             placeholder="Password"></input>
         </div>
@@ -34,45 +34,68 @@
     <div class="row">
       <div class="col-sm-8">
         <h5 style="text-align: center" id="round-category"></h5>
-        <div id="the-word"></div>
+        <div id="the-word" class="hidden"></div>
         <div class="row">
-          <div class="col-md-3">
-            <textarea rows="1" cols="3" maxlength="1" id="current-guess"></textarea>
+          <div class="col-md-3 submit-block">
+            <textarea rows="1" cols="3" maxlength="1" id="current-guess" class="hidden"></textarea>
           </div>
           <div class="col-md-3">
-            <button type="button" class="btn btn-outline-light" id="submit-guess" onclick="runGame()">SUBMIT</button>
+            <button type="button" class="btn btn-outline-light hidden" id="submit-guess">SUBMIT</button>
           </div>
           <div class="col-md-6">
-            <h3 class="commentary"></h3>
+            <h3 id="commentary">Waiting for player...</h3>
           </div>
         </div>
-
-        <h4 id="round-guesses"></h4>
-        <div class="row">
-          <div class="col">
-            ENTER PUZZLE GUESS:
-            {{!-- only should show when selecting "solve puzzle" --}}
-            <input type="text" id="puzzle-guess" class="form-control" aria-describedby="puzzle-guess-value">            <button class="btn btn-outline-light" id="solve-submit">SUBMIT SOLVE!</button><br>
-            <button class="btn btn-outline-light" id="vowel-choice">Buy Vowel ($250)</button>
-            {{!-- Buy vowel needs to be available only after a correct consonant guess --}}
-            <button class="btn btn-outline-light" id="solve-choice">Solve Puzzle</button>
-            {{!-- Solve unavailable unless  --}}
-          </div>
+        <h4>
+          <div id="round-guesses"></div>
+        </h4>
         </div>
-      </div>
       <div class="col-sm-4">
-        <div class="wheel"><br><br>wheel placeholder</div>
-        <div class="spin-choice">
-          <button class="btn btn-outline-light" id="spin-choice">Spin</button>
+        <div id="wheel"></div>
+      </div>
+    </div>
+    <div class="row">
+          <div class="col">
+            <div id="solve-area" class="hidden">
+              <h5>ENTER PUZZLE GUESS:</h5>
+              <textarea rows="1" id="puzzle-guess-value" class="form-control"></textarea>
+              <button class="btn btn-outline-light" id="solve-submit">SUBMIT SOLVE!</button><br>
+            </div>
+          </div>
         </div>
+    <div class="row">
+      <div class="col-sm-4 ctr choice-block">
+        <button class="btn btn-outline-light hidden" id="solve-choice">SOLVE PUZZLE</button>
+      </div>
+      <div class="col-sm-4 ctr">
+        <button class="btn btn-outline-light hidden" id="vowel-choice">BUY VOWEL ($500)</button>
+      </div>
+      <div class="col-sm-4 ctr">
+        <button class="btn btn-outline-light hidden" id="spin-choice">ROLL!</button>
       </div>
     </div>
     <hr>
     <div class="row">
-      <div class="col">
-        PLAYER NAME placeholder<br>
-        Current Score placeholder<br>
-        <button id="start-round">Click to start</button>
+      <div class="col-md-4">
+        <div id="p1-card" class="p-card">
+          <h5>PLAYER 1</h5>
+          <h5>SCORE: $<span id="p1-score"></span></h5>
+          <button id="p1start-round">CLICK TO START</button>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div id="p2-card" class="p-card">
+          <h5>PLAYER 2</h5>
+          <h5>SCORE: $<span id="p2-score"></span></h5>
+          <button id="p2start-round">CLICK TO START</button>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div id="p3-card" class="p-card">
+          <h5>PLAYER 3</h5>
+          <h5>SCORE: $<span id="p3-score"></span></h5>
+          <button id="p3start-round">CLICK TO START</button>
+        </div>
       </div>
     </div>
   </div>
