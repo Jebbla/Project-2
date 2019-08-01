@@ -45,23 +45,41 @@ app.post('/api/posts', verifyToken, (req, res) => {
 });
 
 app.post('/api/login', (req, res) => {
+  db.Users.findAll({}).then(users => {
+    console.log(req.body);
+    // console.log(users);
+    var previouslyRegistered = false;
+    for (i = 0 ; i < users.length ; i++) {
+      if (users[i].dataValues.username === req.body.username) {
+        previouslyRegistered = true;
+        res.json({
+          authenticated: true
+        })
+      };
+    } if (!previouslyRegistered) { 
+      console.log("hell no");
+      jwt.sign({user}, 'secretkey', (err, token) => {
+        db.Users.create({
+          username: req.body.username,
+          password: req.body.password,
+          score: req.body.score,
+          token: token
+        }).then(function(dbExample) {
+          res.json({
+            token
+          });
+        });
+      });
+    } else {
+      console.log("yeah");
+    }
+  });
   //mock user
   const user = {
     id: 1,
     username: "Raxem",
   }
-  jwt.sign({user}, 'secretkey', (err, token) => {
-    db.Users.create({
-      username: req.body.username,
-      password: req.body.password,
-      score: req.body.score,
-      token: token
-    }).then(function(dbExample) {
-      res.json({
-        token
-      });
-    });
-  });
+
 });
 
 //format of token

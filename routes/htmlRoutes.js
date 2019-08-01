@@ -1,4 +1,6 @@
 var db = require("../models");
+// var userName = document.getElementById("login-username");
+// var password = document.getElementById("login-password");
 
 module.exports = function(app) {
   // Load index page
@@ -22,6 +24,12 @@ module.exports = function(app) {
     });
   });
 
+// compare user input to database for password and username
+// if(userName.value !== password.value){
+//   console.log("correct login");
+// }else{ 
+//   console.log("incorrect login");
+// };
   // Render 404 page for any unmatched routes
   app.get("*", function(req, res) {
     res.render("404");
