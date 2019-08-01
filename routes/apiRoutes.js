@@ -16,6 +16,8 @@ module.exports = function (app) {
     },
     spinResult: {},
     numberCorrect: null,
+    vowelGuess: false,
+    gameWon: false,
   };
 
   var gameBackEnd = {
@@ -44,7 +46,9 @@ module.exports = function (app) {
       game.players.p1Score = parseInt(0);
       game.players.p2Score = parseInt(0);
       game.players.p3Score = parseInt(0);
-      game.guessCorrect = null
+      game.guessCorrect = null;
+      game.spinResult = {};
+      game.gameWon = false;
     }
   }
 
@@ -54,7 +58,6 @@ module.exports = function (app) {
     var getSolution = function () {
       db.GameSolution.findAll({}).then(function (solutions) {
         gFunctions.newGame();
-        // console.log(solutions);
         gameBackEnd.roundSolution = solutions[Math.floor(Math.random() * solutions.length)];
         gameBackEnd.phrase = gameBackEnd.roundSolution.dataValues.solution.toUpperCase();
         gameBackEnd.phraseArr = gameBackEnd.phrase.split("");
@@ -100,6 +103,7 @@ module.exports = function (app) {
     };
 
     getSolution();
+    
     getWheel();
     setTimeout(function () {
       res.json(game);
@@ -107,12 +111,16 @@ module.exports = function (app) {
       console.log(gameBackEnd.phrase);
       console.log(game.category);
       console.log(game.blanksArr.join(""));
+      console.log(gameBackEnd.roundSolution);
     }, 750);
-
-    // Generate the wheel values from the DB as well
   });
 
-  // Can this value be used to determine the index of the spin?
+  app.get("/api/guessVowel", function (req, res) {
+    game.vowelGuess = true;
+    game.players.p1Score -= parseInt(500);
+    res.json(game);
+  });
+
   app.get("/api/spinWheel", function (req, res) {
     var spinValue = Math.floor(Math.random() * 24);
     game.spinResult = gameBackEnd.fullWheel[spinValue];
@@ -124,8 +132,28 @@ module.exports = function (app) {
     console.log(game.spinResult);
   });
 
-  app.get("/api/processGuess/", function (req, res) {
+  app.get("/api/processSolve", function (req, res) {
+    var puzzleGuess = req.query.solveGuess;
+    var solution = gameBackEnd.roundSolution.dataValues.solution;
+    solution = solution.toUpperCase();
+    solution = solution.replace(/-| |\?|!|[0-9]|,/g,'');
+    console.log(puzzleGuess);
+    console.log(solution);
+    if (puzzleGuess === solution) {
+      game.gameWon = true;
+      game.players.p1Score += parseInt(50000);
+      game.resText = "Holy crap, you freaking won! Have $50,000!";
+      // do a bunch of other stuff too
+    } else {
+      game.players.p1Score -= parseInt(2000);
+      game.resText = "Sorry, that's incorrect! The penalty is $2000."
+    };
+    res.json(game);
+  });
+
+  app.get("/api/processGuess", function (req, res) {
     var guess = req.query.guess;
+    game.vowelGuess = false;
     if (game.guessLog.includes(guess)) {
       game.resText = "Oh, no! That letter has already been guessed!"
       game.players.p1Score -= parseInt(game.spinResult.spaceValue);
@@ -146,23 +174,20 @@ module.exports = function (app) {
             game.players.p1Score += parseInt(game.spinResult.spaceValue);
           };
         };
-        if(game.numberCorrect === 1) {
+        if (game.numberCorrect === 1) {
           game.resText = 'Yes! There is one ' + guess + '!';
         } else {
           game.resText = 'Yes! There are ' + game.numberCorrect + ' ' + guess + 's!';
         };
         console.log(game.players.p1Score);
-        gFunctions.isWin();
         res.json(game);
       } else {
         gameBackEnd.guessCorrect = 0;
         game.guessCorrect = 0;
         game.resText = 'Sorry, no ' + guess + 's.';
         game.players.p1Score -= parseInt(game.spinResult.spaceValue);
-        // function to lose money
         res.json(game);
       }
     }
-
   });
 };
