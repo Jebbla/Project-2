@@ -31,6 +31,11 @@ var API = {
         "Content-Type": "application/json",
         Authorization: "Bearer " + "my token goes here"
       },
+      statusCode: {
+        401: function() {
+          alert("BAD PASSWORD!");
+        }
+      },
       type: "POST",
       url: "api/login",
       data: JSON.stringify(example)
@@ -144,13 +149,15 @@ var handleFormSubmit = function(event) {
     score: $loginHighscore.val().trim()
   };
 
-  if (!(example.username && example.password && example.score)) {
-    alert("You must enter a username, password, and score!");
+  if (!(example.username && example.password)) {
+    alert("You must enter a username, password");
     return;
   }
 
-  API.saveExample(example).then(function(data) {
-    localStorage.setItem("triviaToken", data.token);
+  API.saveExample(example).then(function(data, ) {
+    if(data) {
+      localStorage.setItem("triviaToken", data.token);
+    }
     // refreshExamples();
   });
 
