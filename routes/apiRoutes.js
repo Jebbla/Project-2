@@ -116,9 +116,14 @@ module.exports = function (app) {
   });
 
   app.get("/api/guessVowel", function (req, res) {
-    game.vowelGuess = true;
-    game.players.p1Score -= parseInt(500);
-    res.json(game);
+    if (game.players.p1Score < parseInt(500)) {
+      game.resText = "Sorry, you don't have enough money right now.";
+      res.json(game);
+    } else {
+      game.vowelGuess = true;
+      game.players.p1Score -= parseInt(500);
+      res.json(game);
+    };
   });
 
   app.get("/api/spinWheel", function (req, res) {
