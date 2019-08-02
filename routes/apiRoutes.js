@@ -1,4 +1,5 @@
 var db = require("../models");
+var jwt = require('jsonwebtoken');
 
 module.exports = function (app) {
   // Game data that gets sent to the front end
@@ -127,6 +128,49 @@ module.exports = function (app) {
     res.json(game);
     console.log("____Spin result____");
     console.log(game.spinResult);
+  });
+
+  app.post('/api/login', (req, res) => {
+    let user = {
+      user: 'Raxem',
+      password: 123
+    }
+  
+    db.Users.findAll({}).then(users => {
+      console.log(req.body);
+      // console.log(users);
+      var previouslyRegistered = false;
+      for (i = 0; i < users.length; i++) {
+        if ((users[i].dataValues.username === req.body.username)) {
+          if (users[i].dataValues.password === req.body.password) {
+            previouslyRegistered = true;
+            res.json({
+              authenticated: true
+            })
+          } else {
+            previouslyRegistered = true;
+            res.status(401).json({});
+          }
+        };
+      } if (!previouslyRegistered) {
+        console.log("hell no");
+        jwt.sign({ user }, 'secretkey', (err, token) => {
+          db.Users.create({
+            username: req.body.username,
+            password: req.body.password,
+            score: req.body.score,
+            token: token
+          }).then(function (dbExample) {
+            res.json({
+              token
+            });
+          });
+        });
+      } else {
+        console.log("yeah");
+      }
+    });
+  
   });
 
   app.get("/api/processSolve", function (req, res) {

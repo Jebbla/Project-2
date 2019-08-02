@@ -23,6 +23,8 @@ var $p2Score = $("#p2-score");
 var $p3Score = $("#p3-score");
 var $wheel = $("#wheel");
 var vowelGuess = false;
+var $exampleText = $("#example-text");
+var $loginHighscore = $("#login-highscore");
 
 // The API object contains methods for each kind of request we'll make
 var API = {
@@ -32,6 +34,11 @@ var API = {
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + "my token goes here"
+      },
+      statusCode: {
+        401: function() {
+          alert("BAD PASSWORD!");
+        }
       },
       type: "POST",
       url: "api/login",
@@ -206,10 +213,11 @@ var refreshExamples = function() {
 var handleFormSubmit = function(event) {
   event.preventDefault();
 
-  var user = {
-    text: $exampleText.val().trim(),
-    description: $exampleDescription.val().trim()
-  };
+  var example = {
+    username: $loginUsername.val().trim(),
+    password: $loginPassword.val().trim(),
+    score: $loginHighscore.val().trim()
+  }
 
   if (!(example.text && example.description)) {
     alert("You must enter an example text and description!");
@@ -221,8 +229,9 @@ var handleFormSubmit = function(event) {
     refreshExamples();
   });
 
-  $exampleText.val("");
-  $exampleDescription.val("");
+  $loginUsername.val("");
+  $loginPassword.val("");
+  $loginHighscore.val("");
 };
 
 // handleDeleteBtnClick is called when an example's delete button is clicked
