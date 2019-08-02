@@ -65,6 +65,10 @@ var API = {
       $spinChoice.show();
       $theWord.show();
       $wheel.show();
+      $roundGuesses.show();
+      $roundGuesses.text(res.guessLog.join(" "));
+      $wheel.text(res.spinResult.displayValue);
+      console.log(res);
     });
   },
   spinWheel: function() {
@@ -152,8 +156,8 @@ var API = {
       if (res.gameWon) {
         $solveArea.hide();
         $roundGuesses.hide();
-        //show full solution
-        //show new game area
+        $theWord.text(res.blanksArr.join(""));
+        $p1StartRound.show();
       } else {
         //lose
         $solveArea.hide();
