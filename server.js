@@ -41,7 +41,7 @@ app.get('/api/test', (req, res) => {
 
 app.post('/api/posts', verifyToken, (req, res) => {
   jwt.verify(req.token, 'secretkey', (err, authData) => {
-    if (err) {
+    if(err) {
       res.sendStatus(403);
     } else {
       res.json({
@@ -53,46 +53,21 @@ app.post('/api/posts', verifyToken, (req, res) => {
 });
 
 app.post('/api/login', (req, res) => {
-  let user = {
-    user: 'Raxem',
-    password: 123
+  //mock user
+  const user = {
+    id: 1,
+    username: "Raxem",
   }
-
-  db.Users.findAll({}).then(users => {
-    console.log(req.body);
-    // console.log(users);
-    var previouslyRegistered = false;
-    for (i = 0; i < users.length; i++) {
-      if ((users[i].dataValues.username === req.body.username)) {
-        if (users[i].dataValues.password === req.body.password) {
-          previouslyRegistered = true;
-          res.json({
-            authenticated: true
-          })
-        } else {
-          previouslyRegistered = true;
-          res.status(401).json({});
-        }
-      };
-    } if (!previouslyRegistered) {
-      console.log("hell no");
-      jwt.sign({ user }, 'secretkey', (err, token) => {
-        db.Users.create({
-          username: req.body.username,
-          password: req.body.password,
-          score: req.body.score,
-          token: token
-        }).then(function (dbExample) {
-          res.json({
-            token
-          });
-        });
+  jwt.sign({user}, 'secretkey', (err, token) => {
+    db.Users.create({
+      username: req.body.text,
+      token: token
+    }).then(function(dbExample) {
+      res.json({
+        token
       });
-    } else {
-      console.log("yeah");
-    }
+    });
   });
-
 });
 
 //format of token
@@ -100,22 +75,22 @@ app.post('/api/login', (req, res) => {
 
 //verify token
 function verifyToken(req, res, next) {
-  // get auth header value
-  const bearerHeader = req.headers['authorization'];
-  //check if bearer is undefinded
-  if (typeof bearerHeader !== 'undefined') {
-    //split at the space
-    const bearer = bearerHeader.split(' ');
-    //get token from array
-    const bearerToken = bearer[1];
-    //set the token
-    req.token = bearerToken;
-    //next middleware
-    next();
-  } else {
-    //forbidden
-    res.sendStatus(403);
-  }
+// get auth header value
+const bearerHeader = req.headers['authorization'];
+//check if bearer is undefinded
+if(typeof bearerHeader !== 'undefined') {
+//split at the space
+const bearer = bearerHeader.split(' ');
+//get token from array
+const bearerToken = bearer[1];
+//set the token
+req.token = bearerToken;
+//next middleware
+next();
+} else {
+  //forbidden
+  res.sendStatus(403);
+}
 }
 
 require("./routes/apiRoutes")(app);
@@ -133,7 +108,7 @@ console.log("random ")
 
 
 io.on('connection', function (socket) {
-  io.emit('this', { will: 'be received by everyone' });
+  io.emit('this', { will: 'be received by everyone'});
 
   socket.on('private message', function (from, msg) {
     console.log('I received a private message by ', from, ' saying ', msg);
@@ -147,8 +122,8 @@ io.on('connection', function (socket) {
 module.exports = app;
 
 
-db.sequelize.sync(syncOptions).then(function () {
-  app.listen(PORT, function () {
+db.sequelize.sync(syncOptions).then(function() {
+  app.listen(PORT, function() {
     console.log(
       "==> 🌎  Listening on port %s. Visit http://localhost:%s/ in your browser.",
       PORT,
