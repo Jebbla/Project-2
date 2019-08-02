@@ -24,7 +24,7 @@ var $loginHighscore = $("#login-highscore");
 
 // The API object contains methods for each kind of request we'll make
 var API = {
-  saveExample: function (example) {
+  saveExample: function(example) {
     var token = localStorage.getItem("triviaToken");
     return $.ajax({
       headers: {
@@ -36,34 +36,35 @@ var API = {
       data: JSON.stringify(example)
     });
   },
-  getExamples: function () {
+  getExamples: function() {
     return $.ajax({
       url: "api/examples",
       type: "GET"
     });
   },
-  deleteExample: function (id) {
+  deleteExample: function(id) {
     return $.ajax({
       url: "api/examples/" + id,
       type: "DELETE"
     });
   },
-  startRound: function () {
+  startRound: function() {
     return $.ajax({
       url: "api/startRound",
       type: "GET"
     }).then(function(res) {
       console.log(res);
+      vowelGuess = res.vowelGuess;
       $roundCategory.text(res.category);
       $theWord.text(res.blanksArr.join(""));
       $roundGuesses.text(res.guessLog.join(" "));
       $commentary.text(res.resText);
-      if (res.guessCorrect) {
+      if (res.guessCorrect && res.players.p1Score >= 500) {
         $vowelChoice.show();
-        $solveChoice.show();
       } else {
         $vowelChoice.hide();
       }
+      $solveChoice.show();
       $submitGuess.hide();
       $currentGuess.hide();
       $spinChoice.show();
@@ -73,30 +74,40 @@ var API = {
     });
   },
 
-  submitSolve: function (solveGuess) {
+  submitSolve: function(solveGuess) {
     solveGuess = solveGuess.toUpperCase();
-    solveGuess = solveGuess.replace(/-| |\?|!|[0-9]|,/g,'');
+    solveGuess = solveGuess.replace(/-| |\?|!|[0-9]|,/g, "");
     return $.ajax({
       url: "api/processSolve",
       data: {
         solveGuess: solveGuess
       },
       type: "GET"
-    }).then(function (res) {
+    }).then(function(res) {
       console.log(res);
       $p1Score.text(res.players.p1Score);
       $commentary.text(res.resText);
-      if(res.gameWon) {
-        // Yay win, do some stuff
-      };
+      if (res.gameWon) {
+        $solveArea.hide();
+        $roundGuesses.hide();
+        //show full solution
+        //show new game area
+      } else {
+        //lose
+        $solveArea.hide();
+        $spinChoice.show();
+        $solveChoice.show();
+        $wheel.show();
+      }
+      document.getElementById("puzzle-guess-value").value = "";
     });
   }
 };
 
 // refreshExamples gets new examples from the db and repopulates the list
-var refreshExamples = function () {
-  API.getExamples().then(function (data) {
-    var $examples = data.map(function (example) {
+var refreshExamples = function() {
+  API.getExamples().then(function(data) {
+    var $examples = data.map(function(example) {
       var $a = $("<a>")
         .text(example.username)
         .attr("href", "/example/" + example.id);
@@ -124,7 +135,7 @@ var refreshExamples = function () {
 
 // handleFormSubmit is called whenever we submit a new example
 // Save the new example to the db and refresh the list
-var handleFormSubmit = function (event) {
+var handleFormSubmit = function(event) {
   event.preventDefault();
 
   var example = {
@@ -138,7 +149,7 @@ var handleFormSubmit = function (event) {
     return;
   }
 
-  API.saveExample(example).then(function (data) {
+  API.saveExample(example).then(function(data) {
     localStorage.setItem("triviaToken", data.token);
     // refreshExamples();
   });
@@ -150,12 +161,12 @@ var handleFormSubmit = function (event) {
 
 // handleDeleteBtnClick is called when an example's delete button is clicked
 // Remove the example from the db and refresh the list
-var handleDeleteBtnClick = function () {
+var handleDeleteBtnClick = function() {
   var idToDelete = $(this)
     .parent()
     .attr("data-id");
 
-  API.deleteExample(idToDelete).then(function () {
+  API.deleteExample(idToDelete).then(function() {
     refreshExamples();
   });
 };
@@ -322,17 +333,45 @@ var runGame = function() {
  // alert("username already taken or password incorrect, oops!");
 //}
 
-$("#current-guess").keydown(function (e) {
+$("#current-guess").keydown(function(e) {
   // Only allow delete, backspace, enter:
-  if ($.inArray(e.keyCode, [8, 46, 13]) !== -1) {
+  if ($.inArray(e.keyCode, [8, 46]) !== -1) {
     return;
   }
   // Restrict entries based on whether the current guess is supposed to be a vowel:
-  if (vowelGuess === true && $.inArray(e.keyCode, [65, 69, 73, 79, 85]) === -1) {
+  if (
+    vowelGuess === true &&
+    $.inArray(e.keyCode, [65, 69, 73, 79, 85]) === -1
+  ) {
     e.preventDefault();
-  } else if (vowelGuess === false && $.inArray(e.keyCode, [66, 67, 68, 70, 71, 72, 74, 75, 76, 77, 78, 80, 81, 82, 83, 84, 86, 87, 88, 89, 90]) === -1) {
+  } else if (
+    vowelGuess === false &&
+    $.inArray(e.keyCode, [
+      66,
+      67,
+      68,
+      70,
+      71,
+      72,
+      74,
+      75,
+      76,
+      77,
+      78,
+      80,
+      81,
+      82,
+      83,
+      84,
+      86,
+      87,
+      88,
+      89,
+      90
+    ]) === -1
+  ) {
     e.preventDefault();
-  };
+  }
 });
 
 $(document).on("keypress", function(e) {
