@@ -36,6 +36,8 @@ var API = {
       type: "POST",
       url: "api/login",
       data: JSON.stringify(example)
+    }).then(function(res) {
+      console.log(res);
     });
   },
   getExamples: function() {
