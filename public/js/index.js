@@ -23,6 +23,12 @@ var $p3StartRound = $("#p3start-round");
 var $p1Name = $("#p1-name");
 var $p2Name = $("#p2-name");
 var $p3Name = $("#p3-name");
+var $p1Winnings = $("#p1-winnings");
+var $p2Winnings = $("#p2-winnings");
+var $p3Winnings = $("#p3-winnings");
+var $p1WinningsTag = $("#p1-winnings-tag");
+var $p2WinningsTag = $("#p2-winnings-tag");
+var $p3WinningsTag = $("#p3-winnings-tag");
 var $roundCategory = $("#round-category");
 var $p1Score = $("#p1-score");
 var $p2Score = $("#p2-score");
@@ -43,7 +49,7 @@ var API = {
       },
       statusCode: {
         401: function() {
-          alert("BAD PASSWORD!");
+          alert("That username already exists. Either enter the correct password or choose a new username.");
         }
       },
       type: "POST",
@@ -52,7 +58,9 @@ var API = {
     }).then(function(res) {
       console.log(res);
       if (res.authenticated) {
-        var p1Display = res.authPlayer.toUpperCase();
+        var p1Display = res.game.players.player1.username.toUpperCase();
+        $p1WinningsTag.show();
+        $p1Winnings.text(res.game.players.player1.totalScore);
         $p1Name.text(p1Display);
         $loginButton.hide();
         $loginPassword.hide();
@@ -60,7 +68,9 @@ var API = {
         $logoutButton.show();
         $usernameLabel.hide();
         $passwordLabel.hide();
-      }
+      } else {
+        alert("Thanks for joining the game, " + user.username + ". Enter your credentials again to log in.");
+      };
     });
   },
 
@@ -71,6 +81,8 @@ var API = {
     }).then(function(res){
       console.log(res);
       $p1Name.text(res.players.p1Name);
+      $p1Winnings.text('0');
+      $p1WinningsTag.hide();
       $loginButton.show();
       $loginPassword.show();
       $loginUsername.show();
@@ -200,8 +212,8 @@ var API = {
         $roundGuesses.hide();
         $theWord.text(res.blanksArr.join(""));
         $p1StartRound.show();
+        $p1Winnings.text(res.players.player1.totalScore);
       } else {
-        //lose
         $solveArea.hide();
         $spinChoice.show();
         $solveChoice.show();

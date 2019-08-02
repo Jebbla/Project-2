@@ -33,24 +33,24 @@ app.engine(
 app.set("view engine", "handlebars");
 
 // Routes
-app.get('/api/test', (req, res) => {
-  res.json({
-    message: "Welcome"
-  });
-});
+// app.get('/api/test', (req, res) => {
+//   res.json({
+//     message: "Welcome"
+//   });
+// });
 
-app.post('/api/posts', verifyToken, (req, res) => {
-  jwt.verify(req.token, 'secretkey', (err, authData) => {
-    if(err) {
-      res.sendStatus(403);
-    } else {
-      res.json({
-        message: 'Post created',
-        authData
-      });
-    }
-  });
-});
+// app.post('/api/posts', verifyToken, (req, res) => {
+//   jwt.verify(req.token, 'secretkey', (err, authData) => {
+//     if(err) {
+//       res.sendStatus(403);
+//     } else {
+//       res.json({
+//         message: 'Post created',
+//         authData
+//       });
+//     }
+//   });
+// });
 
 // app.post('/api/login', (req, res) => {
 //   //mock user

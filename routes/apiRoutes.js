@@ -12,6 +12,9 @@ module.exports = function (app) {
     resText: '',
     guessCorrect: null,
     players: {
+      player1: {},
+      player2: {},
+      player3: {},
       p1Name: '',
       p2Name: '',
       p3Name: '',
@@ -62,7 +65,6 @@ module.exports = function (app) {
         gameBackEnd.phraseArr = gameBackEnd.phrase.split("");
         game.category = gameBackEnd.roundSolution.dataValues.category;
         game.blanksArr = [];
-        console.log("STUFF TEMP");
         for (i = 0; i < gameBackEnd.phraseArr.length; i++) {
           game.blanksArr.push("_");
         };
@@ -108,7 +110,7 @@ module.exports = function (app) {
       console.log(gameBackEnd.phrase);
       console.log(game.category);
       console.log(game.blanksArr.join(""));
-      console.log(gameBackEnd.roundSolution);
+      console.log(gameBackEnd.roundSolution.dataValues);
     }, 750);
   });
 
@@ -136,29 +138,24 @@ module.exports = function (app) {
 
   app.get('/api/logout', function (req, res) {
     authenticated = 0;
-    game.players.p1Name = "Player 1";
+    game.players.p1Name = "PLAYER 1";
     res.json(game);
   });
 
   app.post('/api/login', (req, res) => {
-    // console.log(req);
-    // let user = {
-    //   user: 'Raxem',
-    //   password: 123
-    // }
     db.Users.findAll({}).then(users => {
       console.log(req.body);
-      // console.log(users);
       var previouslyRegistered = false;
       for (i = 0; i < users.length; i++) {
-        if ((users[i].dataValues.username === req.body.username)) {
+        if (users[i].dataValues.username === req.body.username) {
           if (users[i].dataValues.password === req.body.password) {
             previouslyRegistered = true;
+            game.players.player1 = users[i].dataValues;
             authenticated = 1;
-            game.players.p1Name = users[i].dataValues.username;
+            console.log(game.players);
             res.json({
               authenticated: true,
-              authPlayer:users[i].dataValues.username
+              game: game
             })
           } else {
             previouslyRegistered = true;
@@ -171,14 +168,18 @@ module.exports = function (app) {
         db.Users.create({
           username: req.body.username,
           password: req.body.password,
+          totalScore: 0,
+          topScore: 0,
+          avgScore: 0,
+          wins: 0,
+          losses: 0
         }).then(function (user) {
-          res.json(user);
+          res.json({
+            user: user,
+          });
         });
-      } else {
-        console.log("yeah");
-      }
+      };
     });
-
   });
 
   app.get("/api/processSolve", function (req, res) {
@@ -191,14 +192,38 @@ module.exports = function (app) {
     if (puzzleGuess === solution) {
       game.gameWon = true;
       game.blanksArr = gameBackEnd.phraseArr;
-      game.players.p1Score += parseInt(50000);
-      game.resText = "Correct guess - you win! $" + game.players.p1Score + " has been added to your total winnings! Hit 'CLICK TO START' to begin a new round!";
-      // TO DO: add score to total
+      game.players.p1Score += parseInt(10000);
+      if(authenticated) {
+        game.resText = "Correct guess - you win! $" + game.players.p1Score + " has been added to your total winnings! Hit 'CLICK TO START' to begin a new round!";
+        db.Users.findOne({
+          username: game.players.player1.username
+        }).then(user => {
+          db.Users.update({
+              totalScore: game.players.player1.totalScore + game.players.p1Score
+            }, {
+              where: {
+                username: game.players.player1.username
+              }
+            })
+            .then(function () {
+              db.Users.findOne({
+                username: game.players.player1.username
+              }).then(user => {
+                console.log(user.dataValues);
+                game.players.player1 = user.dataValues;
+                res.json(game);
+              });
+            });
+        });
+      } else {
+        game.resText = "Correct guess - you win! Make sure to log in at the top of the page to keep track of your winnings. Hit 'CLICK TO START' to begin a new round!";
+        res.json(game);
+      }
     } else {
       game.players.p1Score -= parseInt(2000);
       game.resText = "Sorry, that's incorrect! The penalty is $2000."
+      res.json(game);
     };
-    res.json(game);
   });
 
   app.get("/api/processGuess", function (req, res) {
