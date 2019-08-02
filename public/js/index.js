@@ -58,6 +58,70 @@ var API = {
       url: "api/startRound",
       type: "GET"
     }).then(function(res) {
+      $roundCategory.text(res.category);
+      $commentary.text(res.resText);
+      $theWord.text(res.blanksArr.join(""));
+      $p1Score.text(0);
+      $p2Score.text(0);
+      $p3Score.text(0);
+      $solveChoice.show();
+      $spinChoice.show();
+      $theWord.show();
+      $wheel.show();
+      $roundGuesses.show();
+      $roundGuesses.text(res.guessLog.join(" "));
+      $wheel.text(res.spinResult.displayValue);
+      console.log(res);
+    });
+  },
+  spinWheel: function() {
+    return $.ajax({
+      url: "api/spinWheel",
+      type: "GET"
+    }).then(function(res) {
+      $wheel.text(res.spinResult.displayValue);
+      if (res.spinResult.spaceType === "Bankrupt") {
+        $p1Score.text(res.players.p1Score);
+        $commentary.text("BANKRUPT! Major bummer!");
+        $spinChoice.show();
+        $solveChoice.show();
+      } else {
+        $commentary.text("Enter your guess!");
+        $submitGuess.show();
+        $currentGuess.show();
+        $solveChoice.hide();
+        $spinChoice.hide();
+        document.getElementById("current-guess").value = "";
+        document.querySelector("#current-guess").focus();
+      }
+    });
+  },
+
+  guessVowel: function() {
+    return $.ajax({
+      url: "api/guessVowel",
+      type: "GET"
+    }).then(function(res) {
+      vowelGuess = res.vowelGuess;
+      $vowelChoice.hide();
+      $solveChoice.hide();
+      $spinChoice.hide();
+      $currentGuess.show();
+      $submitGuess.show();
+      document.getElementById("current-guess").value = "";
+      document.querySelector("#current-guess").focus();
+    });
+  },
+
+  submitGuess: function(guess) {
+    guess = guess.toUpperCase();
+    return $.ajax({
+      url: "api/processGuess",
+      data: {
+        guess: guess
+      },
+      type: "GET"
+    }).then(function(res) {
       console.log(res);
       vowelGuess = res.vowelGuess;
       $roundCategory.text(res.category);
@@ -95,8 +159,8 @@ var API = {
       if (res.gameWon) {
         $solveArea.hide();
         $roundGuesses.hide();
-        //show full solution
-        //show new game area
+        $theWord.text(res.blanksArr.join(""));
+        $p1StartRound.show();
       } else {
         //lose
         $solveArea.hide();

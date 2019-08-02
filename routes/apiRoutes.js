@@ -1,7 +1,7 @@
 var db = require("../models");
 
 module.exports = function (app) {
-  // Game data
+  // Game data that gets sent to the front end
   var game = {
     blanksArr: [],
     category: '',
@@ -19,8 +19,34 @@ module.exports = function (app) {
     vowelGuess: false,
     gameWon: false,
   };
-  //get request to login 
-  
+
+
+  // Hidden game data, stays on the server
+  var gameBackEnd = {
+    roundSolution: {},
+    phrase: '',
+    phraseArr: [],
+    guessCorrect: null,
+    fullWheel: [],
+  }
+
+  var gFunctions = {
+    newGame: function () {
+      game.blanksArr = [];
+      game.wheelValues = [];
+      game.guessLog = [];
+      gameBackEnd.phraseArr = [];
+      gameBackEnd.fullWheel = [];
+      game.resText = 'Welcome to the game! Good luck!';
+      game.players.p1Score = parseInt(0);
+      game.players.p2Score = parseInt(0);
+      game.players.p3Score = parseInt(0);
+      game.guessCorrect = null;
+      game.spinResult.displayValue = '';
+      game.gameWon = false;
+    }
+  }
+
   // Start Round request; still needs to include generating the wheel values and send to front end
   app.get("/api/startRound", function (req, res) {
 
@@ -32,7 +58,7 @@ module.exports = function (app) {
         gameBackEnd.phraseArr = gameBackEnd.phrase.split("");
         game.category = gameBackEnd.roundSolution.dataValues.category;
         game.blanksArr = [];
-
+        console.log("STUFF TEMP");
         for (i = 0; i < gameBackEnd.phraseArr.length; i++) {
           game.blanksArr.push("_");
         };
@@ -63,11 +89,9 @@ module.exports = function (app) {
         for (i = 0; i < gameBoards.length; i++) {
           gameBackEnd.fullWheel.push(gameBoards[i].dataValues);
         };
-        // console.log(gameBackEnd.fullWheel);
         for (i = 0; i < gameBackEnd.fullWheel.length; i++) {
           game.wheelValues.push(gameBackEnd.fullWheel[i].displayValue);
         };
-        // console.log(game.wheelValues);
       });
     };
 
@@ -115,9 +139,10 @@ module.exports = function (app) {
     console.log(solution);
     if (puzzleGuess === solution) {
       game.gameWon = true;
+      game.blanksArr = gameBackEnd.phraseArr;
       game.players.p1Score += parseInt(50000);
-      game.resText = "Holy crap, you freaking won! Have $50,000!";
-      // do a bunch of other stuff too
+      game.resText = "Correct guess - you win! $" + game.players.p1Score + " has been added to your total winnings! Hit 'CLICK TO START' to begin a new round!";
+      // TO DO: add score to total
     } else {
       game.players.p1Score -= parseInt(2000);
       game.resText = "Sorry, that's incorrect! The penalty is $2000."
