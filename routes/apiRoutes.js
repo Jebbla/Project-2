@@ -20,7 +20,6 @@ module.exports = function (app) {
     gameWon: false,
   };
 
-
   // Hidden game data, stays on the server
   var gameBackEnd = {
     roundSolution: {},
