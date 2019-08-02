@@ -52,23 +52,23 @@ app.post('/api/posts', verifyToken, (req, res) => {
   });
 });
 
-app.post('/api/login', (req, res) => {
-  //mock user
-  const user = {
-    id: 1,
-    username: "Raxem",
-  }
-  jwt.sign({user}, 'secretkey', (err, token) => {
-    db.Users.create({
-      username: req.body.text,
-      token: token
-    }).then(function(dbExample) {
-      res.json({
-        token
-      });
-    });
-  });
-});
+// app.post('/api/login', (req, res) => {
+//   //mock user
+//   const user = {
+//     id: 1,
+//     username: "Raxem",
+//   }
+//   jwt.sign({user}, 'secretkey', (err, token) => {
+//     db.Users.create({
+//       username: req.body.text,
+//       token: token
+//     }).then(function(dbExample) {
+//       res.json({
+//         token
+//       });
+//     });
+//   });
+// });
 
 //format of token
 //authorizatiion: bearer <access_token>

@@ -1,7 +1,10 @@
 // Get references to page elements
+var $usernameLabel = $("#username-label");
+var $passwordLabel = $("#password-label");
 var $loginUsername = $("#login-username");
 var $loginPassword = $("#login-password");
 var $loginButton = $("#login-button");
+var $logoutButton = $("#logout-button");
 var $exampleList = $("#example-list");
 var $theWord = $("#the-word");
 var $commentary = $("#commentary");
@@ -17,41 +20,78 @@ var $spinChoice = $("#spin-choice");
 var $p1StartRound = $("#p1start-round");
 var $p2StartRound = $("#p2start-round");
 var $p3StartRound = $("#p3start-round");
+var $p1Name = $("#p1-name");
+var $p2Name = $("#p2-name");
+var $p3Name = $("#p3-name");
 var $roundCategory = $("#round-category");
 var $p1Score = $("#p1-score");
 var $p2Score = $("#p2-score");
 var $p3Score = $("#p3-score");
 var $wheel = $("#wheel");
 var vowelGuess = false;
+var $exampleText = $("#example-text");
+var $loginHighscore = $("#login-highscore");
 
 // The API object contains methods for each kind of request we'll make
 var API = {
-  saveExample: function(example) {
-    var token = localStorage.getItem("triviaToken");
+  submitUser: function(user) {
+    // var token = localStorage.getItem("triviaToken");
     return $.ajax({
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + "my token goes here"
       },
+      statusCode: {
+        401: function() {
+          alert("BAD PASSWORD!");
+        }
+      },
       type: "POST",
       url: "api/login",
-      data: JSON.stringify(example)
+      data: JSON.stringify(user)
     }).then(function(res) {
       console.log(res);
+      if (res.authenticated) {
+        var p1Display = res.authPlayer.toUpperCase();
+        $p1Name.text(p1Display);
+        $loginButton.hide();
+        $loginPassword.hide();
+        $loginUsername.hide();
+        $logoutButton.show();
+        $usernameLabel.hide();
+        $passwordLabel.hide();
+      }
     });
   },
-  getExamples: function() {
+
+  logOut: function() {
     return $.ajax({
-      url: "api/examples",
+      url: "api/logout",
       type: "GET"
+    }).then(function(res){
+      console.log(res);
+      $p1Name.text(res.players.p1Name);
+      $loginButton.show();
+      $loginPassword.show();
+      $loginUsername.show();
+      $logoutButton.hide();
+      $usernameLabel.show();
+      $passwordLabel.show();
     });
   },
-  deleteExample: function(id) {
-    return $.ajax({
-      url: "api/examples/" + id,
-      type: "DELETE"
-    });
-  },
+
+  // getExamples: function() {
+  //   return $.ajax({
+  //     url: "api/examples",
+  //     type: "GET"
+  //   });
+  // },
+  // deleteExample: function(id) {
+  //   return $.ajax({
+  //     url: "api/examples/" + id,
+  //     type: "DELETE"
+  //   });
+  // },
   startRound: function() {
     return $.ajax({
       url: "api/startRound",
@@ -173,69 +213,66 @@ var API = {
 };
 
 // refreshExamples gets new examples from the db and repopulates the list
-var refreshExamples = function() {
-  API.getExamples().then(function(data) {
-    var $examples = data.map(function(example) {
-      var $a = $("<a>")
-        .text(example.text)
-        .attr("href", "/example/" + example.id);
+// var refreshExamples = function() {
+//   API.getExamples().then(function(data) {
+//     var $examples = data.map(function(example) {
+//       var $a = $("<a>")
+//         .text(example.text)
+//         .attr("href", "/example/" + example.id);
 
-      var $li = $("<li>")
-        .attr({
-          class: "list-group-item",
-          "data-id": example.id
-        })
-        .append($a);
+//       var $li = $("<li>")
+//         .attr({
+//           class: "list-group-item",
+//           "data-id": example.id
+//         })
+//         .append($a);
 
-      var $button = $("<button>")
-        .addClass("btn btn-danger float-right delete")
-        .text("ｘ");
+//       var $button = $("<button>")
+//         .addClass("btn btn-danger float-right delete")
+//         .text("ｘ");
 
-      $li.append($button);
+//       $li.append($button);
 
-      return $li;
-    });
+//       return $li;
+//     });
 
-    $exampleList.empty();
-    $exampleList.append($examples);
-  });
-};
+//     $exampleList.empty();
+//     $exampleList.append($examples);
+//   });
+// };
 
 // handleFormSubmit is called whenever we submit a new example
 // Save the new example to the db and refresh the list
 var handleFormSubmit = function(event) {
   event.preventDefault();
 
-  var user = {
-    text: $exampleText.val().trim(),
-    description: $exampleDescription.val().trim()
+  var creds = {
+    username: $loginUsername.val().trim(),
+    password: $loginPassword.val().trim(),
   };
 
-  if (!(example.text && example.description)) {
+  if (!(creds.username && creds.password)) {
     alert("You must enter an example text and description!");
     return;
   }
 
-  API.saveExample(example).then(function(data) {
-    localStorage.setItem("triviaToken", data.token);
-    refreshExamples();
-  });
+  API.submitUser(creds);
 
-  $exampleText.val("");
-  $exampleDescription.val("");
+  $loginUsername.val("");
+  $loginPassword.val("");
 };
 
 // handleDeleteBtnClick is called when an example's delete button is clicked
 // Remove the example from the db and refresh the list
-var handleDeleteBtnClick = function() {
-  var idToDelete = $(this)
-    .parent()
-    .attr("data-id");
+// var handleDeleteBtnClick = function() {
+//   var idToDelete = $(this)
+//     .parent()
+//     .attr("data-id");
 
-  API.deleteExample(idToDelete).then(function() {
-    refreshExamples();
-  });
-};
+//   API.deleteExample(idToDelete).then(function() {
+//     refreshExamples();
+//   });
+// };
 
 // EVENT LISTENERS
 $loginButton.on("click", handleFormSubmit);
@@ -269,6 +306,9 @@ $submitGuess.on("click", function() {
 });
 $vowelChoice.on("click", function() {
   API.guessVowel();
+});
+$logoutButton.on("click", function() {
+  API.logOut();
 });
 
 $("puzzle-guess-value").keydown(function(e) {

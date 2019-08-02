@@ -1,4 +1,6 @@
 var db = require("../models");
+var jwt = require('jsonwebtoken');
+var authenticated = 0;
 
 module.exports = function (app) {
   // Game data that gets sent to the front end
@@ -10,6 +12,9 @@ module.exports = function (app) {
     resText: '',
     guessCorrect: null,
     players: {
+      p1Name: '',
+      p2Name: '',
+      p3Name: '',
       p1Score: parseInt(0),
       p2Score: parseInt(0),
       p3Score: parseInt(0)
@@ -95,7 +100,7 @@ module.exports = function (app) {
     };
 
     getSolution();
-    
+
     getWheel();
     setTimeout(function () {
       res.json(game);
@@ -129,11 +134,58 @@ module.exports = function (app) {
     console.log(game.spinResult);
   });
 
+  app.get('/api/logout', function (req, res) {
+    authenticated = 0;
+    game.players.p1Name = "Player 1";
+    res.json(game);
+  });
+
+  app.post('/api/login', (req, res) => {
+    // console.log(req);
+    // let user = {
+    //   user: 'Raxem',
+    //   password: 123
+    // }
+    db.Users.findAll({}).then(users => {
+      console.log(req.body);
+      // console.log(users);
+      var previouslyRegistered = false;
+      for (i = 0; i < users.length; i++) {
+        if ((users[i].dataValues.username === req.body.username)) {
+          if (users[i].dataValues.password === req.body.password) {
+            previouslyRegistered = true;
+            authenticated = 1;
+            game.players.p1Name = users[i].dataValues.username;
+            res.json({
+              authenticated: true,
+              authPlayer:users[i].dataValues.username
+            })
+          } else {
+            previouslyRegistered = true;
+            res.status(401).json({});
+          }
+        };
+      };
+
+      if (!previouslyRegistered) {
+        db.Users.create({
+          username: req.body.username,
+          password: req.body.password,
+        }).then(function (user) {
+          res.json(user);
+        });
+      } else {
+        console.log("yeah");
+      }
+    });
+
+  });
+
   app.get("/api/processSolve", function (req, res) {
     var puzzleGuess = req.query.solveGuess;
     var solution = gameBackEnd.roundSolution.dataValues.solution;
     solution = solution.toUpperCase();
-    solution = solution.replace(/-| |\?|!|[0-9]|,/g,'');
+    solution = solution.replace(/-| |\?|!|[0-9]|,/g, '');
     console.log(puzzleGuess);
     console.log(solution);
     if (puzzleGuess === solution) {
