@@ -7,6 +7,11 @@ var basename = path.basename(module.filename);
 var env = process.env.NODE_ENV || "development";
 var config = require(__dirname + "/../config/config.json")[env];
 var db = {};
+var express = require("express");
+var app = express();
+var server = require('http').Server(app);
+var io = require('socket.io').listen(server);
+
 
 if (config.use_env_variable) {
   var sequelize = new Sequelize(process.env[config.use_env_variable]);

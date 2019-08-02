@@ -3,23 +3,21 @@ var db = require("../models");
 module.exports = function(app) {
   // Load index page
   app.get("/", function(req, res) {
-    db.Example.findAll({}).then(function(dbExample) {
+    db.Users.findAll({}).then(function(Users) {
       res.render("index", {
         msg: "Welcome!",
-        examples: dbExample
+        examples: Users
       });
     });
   });
 
-  // Load example page and pass in an example by id
-  app.get("/example/:id", function(req, res) {
-    db.Example.findOne({
-      where: {
-        id: req.params.id
-      }
-    }).then(function(dbExample) {
+// Load example page and pass in an example by user
+  app.get("/users/:user", function(req, res) {
+    db.Users.findOne({ where: { username: req.params.user } }).then(function(
+      User
+    ) {
       res.render("example", {
-        example: dbExample
+        username: User
       });
     });
   });
@@ -29,3 +27,5 @@ module.exports = function(app) {
     res.render("404");
   });
 };
+
+// create a user
