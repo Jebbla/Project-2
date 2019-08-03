@@ -92,18 +92,6 @@ var API = {
     });
   },
 
-  // getExamples: function() {
-  //   return $.ajax({
-  //     url: "api/examples",
-  //     type: "GET"
-  //   });
-  // },
-  // deleteExample: function(id) {
-  //   return $.ajax({
-  //     url: "api/examples/" + id,
-  //     type: "DELETE"
-  //   });
-  // },
   startRound: function() {
     return $.ajax({
       url: "api/startRound",
@@ -224,37 +212,6 @@ var API = {
   }
 };
 
-// refreshExamples gets new examples from the db and repopulates the list
-// var refreshExamples = function() {
-//   API.getExamples().then(function(data) {
-//     var $examples = data.map(function(example) {
-//       var $a = $("<a>")
-//         .text(example.text)
-//         .attr("href", "/example/" + example.id);
-
-//       var $li = $("<li>")
-//         .attr({
-//           class: "list-group-item",
-//           "data-id": example.id
-//         })
-//         .append($a);
-
-//       var $button = $("<button>")
-//         .addClass("btn btn-danger float-right delete")
-//         .text("ｘ");
-
-//       $li.append($button);
-
-//       return $li;
-//     });
-
-//     $exampleList.empty();
-//     $exampleList.append($examples);
-//   });
-// };
-
-// handleFormSubmit is called whenever we submit a new example
-// Save the new example to the db and refresh the list
 var handleFormSubmit = function(event) {
   event.preventDefault();
 
@@ -273,18 +230,6 @@ var handleFormSubmit = function(event) {
   $loginUsername.val("");
   $loginPassword.val("");
 };
-
-// handleDeleteBtnClick is called when an example's delete button is clicked
-// Remove the example from the db and refresh the list
-// var handleDeleteBtnClick = function() {
-//   var idToDelete = $(this)
-//     .parent()
-//     .attr("data-id");
-
-//   API.deleteExample(idToDelete).then(function() {
-//     refreshExamples();
-//   });
-// };
 
 // EVENT LISTENERS
 $loginButton.on("click", handleFormSubmit);
@@ -323,17 +268,15 @@ $logoutButton.on("click", function() {
   API.logOut();
 });
 
-$("puzzle-guess-value").keydown(function(e) {
-  // Enter was pressed without shift key
+$("#puzzle-guess-value").keydown(function(e) {
   if (e.keyCode === 13 && !e.shiftKey) {
-    // prevent default behavior
     e.preventDefault();
   }
 });
 
 $("#current-guess").keydown(function(e) {
   // Only allow delete, backspace, enter:
-  if ($.inArray(e.keyCode, [8, 46]) !== -1) {
+  if ($.inArray(e.keyCode, [8, 13, 46]) !== -1) {
     return;
   }
   // Restrict entries based on whether the current guess is supposed to be a vowel:
