@@ -1,13 +1,13 @@
 require("dotenv").config();
-var express = require('express');
+var express = require("express");
 var exphbs = require("express-handlebars");
-var jwt = require("jsonwebtoken");
+// var jwt = require("jsonwebtoken");
 
-var path = require("path");
-var bodyParser = require("body-parser");
+// var path = require("path");
+// var bodyParser = require("body-parser");
 var db = require("./models");
-var io = require('socket.io')(server);
-var server = require('http').Server(app);
+var io = require("socket.io")(server);
+var server = require("http").Server(app);
 
 var app = express();
 
@@ -103,24 +103,22 @@ var syncOptions = { force: false };
 if (process.env.NODE_ENV === "test") {
   syncOptions.force = true;
 }
-console.log("random ")
+console.log("random ");;
 // Starting the server, syncing our models ------------------------------------/
 
+io.on("connection", function(socket) {
+  io.emit("this", { will: "be received by everyone"});
 
-io.on('connection', function (socket) {
-  io.emit('this', { will: 'be received by everyone'});
-
-  socket.on('private message', function (from, msg) {
-    console.log('I received a private message by ', from, ' saying ', msg);
+  socket.on("private message", function (from, msg) {
+    console.log("I received a private message by ", from, " saying ", msg);
   });
 
-  socket.on('disconnect', function () {
-    io.emit('user disconnected');
+  socket.on("disconnect", function () {
+    io.emit("user disconnected");
   });
 });
 
 module.exports = app;
-
 
 db.sequelize.sync(syncOptions).then(function() {
   app.listen(PORT, function() {
