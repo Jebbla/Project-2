@@ -5,7 +5,7 @@ var $loginUsername = $("#login-username");
 var $loginPassword = $("#login-password");
 var $loginButton = $("#login-button");
 var $logoutButton = $("#logout-button");
-// var $exampleList = $("#example-list");
+var $exampleList = $("#example-list");
 var $theWord = $("#the-word");
 var $commentary = $("#commentary");
 var $currentGuess = $("#current-guess");
@@ -18,25 +18,25 @@ var $solveArea = $("#solve-area");
 var $vowelChoice = $("#vowel-choice");
 var $spinChoice = $("#spin-choice");
 var $p1StartRound = $("#p1start-round");
-// var $p2StartRound = $("#p2start-round");
-// var $p3StartRound = $("#p3start-round");
+var $p2StartRound = $("#p2start-round");
+var $p3StartRound = $("#p3start-round");
 var $p1Name = $("#p1-name");
-// var $p2Name = $("#p2-name");
-// var $p3Name = $("#p3-name");
+var $p2Name = $("#p2-name");
+var $p3Name = $("#p3-name");
 var $p1Winnings = $("#p1-winnings");
-// var $p2Winnings = $("#p2-winnings");
-// var $p3Winnings = $("#p3-winnings");
+var $p2Winnings = $("#p2-winnings");
+var $p3Winnings = $("#p3-winnings");
 var $p1WinningsTag = $("#p1-winnings-tag");
-// var $p2WinningsTag = $("#p2-winnings-tag");
-// var $p3WinningsTag = $("#p3-winnings-tag");
+var $p2WinningsTag = $("#p2-winnings-tag");
+var $p3WinningsTag = $("#p3-winnings-tag");
 var $roundCategory = $("#round-category");
 var $p1Score = $("#p1-score");
 var $p2Score = $("#p2-score");
 var $p3Score = $("#p3-score");
 var $wheel = $("#wheel");
 var vowelGuess = false;
-// var $exampleText = $("#example-text");
-// var $loginHighscore = $("#login-highscore");
+var $exampleText = $("#example-text");
+var $loginHighscore = $("#login-highscore");
 
 // The API object contains methods for each kind of request we'll make
 var API = {
@@ -49,9 +49,7 @@ var API = {
       },
       statusCode: {
         401: function() {
-          alert(
-            "That username already exists. Either enter the correct password or choose a new username."
-          );
+          alert("That username already exists. Either enter the correct password or choose a new username.");
         }
       },
       type: "POST",
@@ -71,12 +69,8 @@ var API = {
         $usernameLabel.hide();
         $passwordLabel.hide();
       } else {
-        alert(
-          "Thanks for joining the game, " +
-            user.username +
-            ". Enter your credentials again to log in."
-        );
-      }
+        alert("Thanks for joining the game, " + user.username + ". Enter your credentials again to log in.");
+      };
     });
   },
 
@@ -84,10 +78,10 @@ var API = {
     return $.ajax({
       url: "api/logout",
       type: "GET"
-    }).then(function(res) {
+    }).then(function(res){
       console.log(res);
       $p1Name.text(res.players.p1Name);
-      $p1Winnings.text("0");
+      $p1Winnings.text('0');
       $p1WinningsTag.hide();
       $loginButton.show();
       $loginPassword.show();
@@ -223,7 +217,7 @@ var handleFormSubmit = function(event) {
 
   var creds = {
     username: $loginUsername.val().trim(),
-    password: $loginPassword.val().trim()
+    password: $loginPassword.val().trim(),
   };
 
   if (!(creds.username && creds.password)) {
