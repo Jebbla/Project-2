@@ -70,21 +70,21 @@ module.exports = function(app) {
         }
         for (i = 0; i < gameBackEnd.phraseArr.length; i++) {
           switch (gameBackEnd.phraseArr[i]) {
-            case " ":
-              game.blanksArr[i] = " ";
-              break;
-            case "-":
-              game.blanksArr[i] = "-";
-              break;
-            case "?":
-              game.blanksArr[i] = "?";
-              break;
-            case ",":
-              game.blanksArr[i] = ",";
-              break;
-            default:
-              "_";
-              break;
+          case " ":
+            game.blanksArr[i] = " ";
+            break;
+          case "-":
+            game.blanksArr[i] = "-";
+            break;
+          case "?":
+            game.blanksArr[i] = "?";
+            break;
+          case ",":
+            game.blanksArr[i] = ",";
+            break;
+          default:
+            "_";
+            break;
           }
         }
       });
