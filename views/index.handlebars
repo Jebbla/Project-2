@@ -8,28 +8,26 @@
       <div class="col-md-3">
         <form class="clearfix mb-4" action="POST">
           <div class="form-group">
-            <label for="example-text">USERNAME</label>
-            <input type="text" id="example-text" class="form-control" aria-describedby="example-text"
+            <label for="login-username" id="username-label">USERNAME</label>
+            <input type="text" id="login-username" class="form-control" aria-describedby="example-text"
               placeholder="Enter Username">
-          </div>
-          <div class="form-group">
-            <label for="example-description">HIGHSCORE</label>
-            <textarea class="form-control" id="example-description" aria-describedby="example-description"
-              placeholder="Enter Example Description"></textarea>
           </div>
       </div>
       <div class="col-md-3">
         <div class="form-group">
-          <label for="login-password">PASSWORD</label>
+          <label for="login-password" id="password-label">PASSWORD</label>
           <input type="text" id="login-password" class="form-control" aria-describedby="login-password"
             placeholder="Password"></input>
         </div>
       </div>
       <div class="col-md-2">
         <div class="form-group">
-          <button id="login-button" class="btn  btn-outline-light" style="margin-top:16px">LOG IN</button>
+          <button id="login-button" class="btn btn-outline-light" style="margin-top:16px">LOG IN</button>
         </div>
         </form>
+        <div>
+          <button id="logout-button" class="btn btn-outline-light hidden" style="margin-top:16px">LOG OUT</button>
+        </div>
       </div>
     </div>
     <hr>
@@ -80,22 +78,26 @@
     <div class="row">
       <div class="col-md-4">
         <div id="p1-card" class="p-card">
-          <h5 id="p1-name">PLAYER 1</h5>
-          <h5>SCORE: $<span id="p1-score"></span></h5>
+          <h4 id="p1-name">PLAYER 1</h4>
+          <h6>ROUND SCORE: $<span id="p1-score"></span></h6>
+          <p class="hidden" id="p1-winnings-tag">WINNINGS: $<span id="p1-winnings"></span></p>
           <button id="p1start-round">CLICK TO START</button>
         </div>
       </div>
       <div class="col-md-4">
         <div id="p2-card" class="p-card">
-          <h5 id="p2-name">PLAYER 2</h5>
-          <h5>SCORE: $<span id="p2-score"></span></h5>
+          <h4 id="p2-name">PLAYER 2</h4>
+          <h6>ROUND SCORE: $<span id="p2-score"></span></h6>
+          <p class="hidden" id="p2-winnings-tag">WINNINGS: $<span id="p2-winnings"></span></p>
           <button id="p2start-round">CLICK TO START</button>
+
         </div>
       </div>
       <div class="col-md-4">
         <div id="p3-card" class="p-card">
-          <h5 id="p3-name">PLAYER 3</h5>
-          <h5>SCORE: $<span id="p3-score"></span></h5>
+          <h4 id="p3-name">PLAYER 3</h4>
+          <h6>ROUND SCORE: $<span id="p3-score"></span></h6>
+          <p class="hidden" id="p3-winnings-tag">WINNINGS: $<span id="p3-winnings"></span></p>
           <button id="p3start-round">CLICK TO START</button>
         </div>
       </div>
