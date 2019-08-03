@@ -2,10 +2,3 @@
 node_modules
 npm-debug.log
 .env
-public/js/Winwheel.js
-public/js/Winwheel.min.js
-public/js/examples
-public/js/index.html
-public/js/license
-public/js/README
-test
