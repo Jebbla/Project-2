@@ -11,7 +11,7 @@ module.exports = function(app) {
     });
   });
 
-// Load example page and pass in an example by user
+  // Load example page and pass in an example by user
   app.get("/users/:user", function(req, res) {
     db.Users.findOne({ where: { username: req.params.user } }).then(function(
       User

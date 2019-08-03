@@ -195,8 +195,8 @@ module.exports = function (app) {
       game.players.p1Score += parseInt(10000);
       if(authenticated) {
         game.resText = "Correct guess - you win! $" + game.players.p1Score + " has been added to your total winnings! Hit 'CLICK TO START' to begin a new round!";
-        db.Users.findOne({
-          username: game.players.player1.username
+        db.Users.findOne({ where: {
+          username: game.players.player1.username }
         }).then(function() {
           db.Users.update({
             totalScore: game.players.player1.totalScore + game.players.p1Score
@@ -206,8 +206,8 @@ module.exports = function (app) {
             }
           })
             .then(function () {
-              db.Users.findOne({
-                username: game.players.player1.username
+              db.Users.findOne({ where: {
+                username: game.players.player1.username }
               }).then(function(user) {
                 console.log(user.dataValues);
                 game.players.player1 = user.dataValues;
